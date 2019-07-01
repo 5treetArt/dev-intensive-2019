@@ -1,6 +1,8 @@
 package ru.skillbranch.devintensive.extensions
 
 import java.lang.IllegalStateException
+import java.lang.Math.abs
+import java.lang.Math.round
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -32,21 +34,43 @@ fun Date.add(value:Int, units: TimeUnits = TimeUnits.SECOND):Date {
 }
 
 fun Date.humanizeDiff(date: Date = Date()): String {
-    //TODO был только что,
-    // был несколько секунд назад,
-    // был n секунд назад,
-    // был несколько минут назад,
-    // был n минут назад,
-    // был несколько часов назад,
-    // был n часов назад,
-    // был несколько дней назад,
-    // был n дней(дня, день) назад,
-    // был несколько несколько назад,
-    // был n недель назад,
-    // был более года назад,
-    // был n лет(года, год) назад,
 
-    TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    val diff = date.time - this.time
+
+    val format: String = when(diff){
+        in 0..Long.MAX_VALUE -> "%s назад"
+        else -> "через %s"
+    }
+
+    return when(abs(diff)) {
+        in 0..(1 * SECOND) -> return when{
+            diff > 0 -> "только что"
+            else -> "скоро"
+        }
+        in (1 * SECOND)..(45 * SECOND) -> String.format(format, "несколько секунд")
+        in (45 * SECOND)..(75 * SECOND) -> String.format(format, "минуту")
+        in (75 * SECOND)..(45 * MINUTE) -> String.format(format, decline(diff, MINUTE, arrayOf("минут", "минуту", "минуты")))
+        in (45 * MINUTE)..(75 * MINUTE) -> String.format(format, "час")
+        in (75 * MINUTE)..(22 * HOUR) -> String.format(format, decline(diff, HOUR, arrayOf("часов", "час", "часа")))
+        in (22 * HOUR)..(26 * HOUR) -> String.format(format, "день")
+        in (26 * HOUR)..(360 * DAY) -> String.format(format, decline(diff, DAY, arrayOf("дней", "день", "дня")))
+        else -> return when{
+            diff > 0 -> "более года назад"
+            else -> "более чем через год"
+        }
+    }
+}
+
+fun decline(diff: Long, timeUnit: Long, cases: Array<String>): String {
+    val units = round(abs(diff).toDouble()/ timeUnit)
+
+    return when(units % 10) {
+        0L -> "" + units + " " + cases[0]
+        in 5..9 -> "" + units + " " + cases[0]
+        1L -> "" + units + " " + cases[1]
+        in 2..4 -> "" + units + " " + cases[2]
+        else -> ""
+    }
 }
 
 enum class TimeUnits{

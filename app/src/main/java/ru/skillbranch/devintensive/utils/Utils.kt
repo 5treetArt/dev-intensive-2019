@@ -2,22 +2,81 @@ package ru.skillbranch.devintensive.utils
 
 object Utils {
     fun parseFullName(fullName:String?):Pair<String?, String?>{
-
-        //TODO Fix null, empty, and space(" ") strings
         val parts : List<String>? = fullName?.split( " ")
 
-        val firstName = parts?.getOrNull(0)
-        val lastName = parts?.getOrNull(1)
+        var firstName = parts?.getOrNull(0)
+        if (firstName == "")
+            firstName = null
+
+        var lastName = parts?.getOrNull(1)
+        if (lastName == "")
+            lastName = null
+
         return firstName to lastName
     }
 
-    fun transliteration(payload: String, divider:String = " "): String {
-        //TODO cyrilic to latin letters translit
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
+    fun transliteration(payload: String, divider:String = " "): String =
+        payload.toLowerCase()
+            .toCharArray()
+            .joinToString(separator = "") {
+                if (map.containsKey(it))
+                    map[it] ?: ""
+                else
+                    it.toString()
+            }
+            .split(" ")
+            .joinToString(separator = " ") { it.capitalize() }
+            .replace(" ", divider)
 
     fun toInitials(firstName: String?, lastName: String?): String? {
-        //TODO get initials from first and last name
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+
+        val firstLet = firstLetterOrNull(firstName)
+        val secondLet = firstLetterOrNull(lastName)
+
+        if (firstLet == null && secondLet == null)
+            return null
+
+        return ((firstLet ?: "").toString() + (secondLet ?: "").toString()).toUpperCase()
     }
+
+    private fun firstLetterOrNull(str: String?): Char?{
+        if (!str.isNullOrBlank())
+            return str[0]
+        return null
+    }
+
+    private val map: Map<Char, String> = mapOf(
+        'а' to "a",
+        'б' to "b",
+        'в' to "v",
+        'г' to "g",
+        'д' to "d",
+        'е' to "e",
+        'ё' to "e",
+        'ж' to "zh",
+        'з' to "z",
+        'и' to "i",
+        'й' to "i",
+        'к' to "k",
+        'л' to "l",
+        'м' to "m",
+        'н' to "n",
+        'о' to "o",
+        'п' to "p",
+        'р' to "r",
+        'с' to "s",
+        'т' to "t",
+        'у' to "u",
+        'ф' to "f",
+        'х' to "h",
+        'ц' to "c",
+        'ч' to "ch",
+        'ш' to "sh",
+        'щ' to "sh'",
+        'ъ' to "",
+        'ы' to "i",
+        'ь' to "",
+        'э' to "e",
+        'ю' to "yu",
+        'я' to "ya")
 }
