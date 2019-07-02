@@ -44,7 +44,7 @@ fun Date.humanizeDiff(date: Date = Date()): String {
 
     return when(abs(diff)) {
         in 0..(1 * SECOND) -> return when{
-            diff > 0 -> "только что"
+            diff >= 0 -> "только что"
             else -> "скоро"
         }
         in (1 * SECOND)..(45 * SECOND) -> String.format(format, "несколько секунд")
@@ -64,9 +64,9 @@ fun Date.humanizeDiff(date: Date = Date()): String {
 fun decline(diff: Long, timeUnit: Long, cases: Array<String>): String {
     val units = round(abs(diff).toDouble()/ timeUnit)
 
-    return when(units % 10) {
+    return when(units % 20) {
         0L -> "" + units + " " + cases[0]
-        in 5..9 -> "" + units + " " + cases[0]
+        in 5..19 -> "" + units + " " + cases[0]
         1L -> "" + units + " " + cases[1]
         in 2..4 -> "" + units + " " + cases[2]
         else -> ""

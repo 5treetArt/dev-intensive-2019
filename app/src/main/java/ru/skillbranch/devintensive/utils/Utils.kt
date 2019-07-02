@@ -1,8 +1,10 @@
 package ru.skillbranch.devintensive.utils
 
+import java.lang.Exception
+
 object Utils {
     fun parseFullName(fullName:String?):Pair<String?, String?>{
-        val parts : List<String>? = fullName?.split( " ")
+        val parts : List<String>? = fullName?.split(" ")?.filter { s: String -> !s.isBlank() }
 
         var firstName = parts?.getOrNull(0)
         if (firstName == "")
@@ -16,17 +18,16 @@ object Utils {
     }
 
     fun transliteration(payload: String, divider:String = " "): String =
-        payload.toLowerCase()
-            .toCharArray()
-            .joinToString(separator = "") {
-                if (map.containsKey(it))
-                    map[it] ?: ""
-                else
-                    it.toString()
-            }
-            .split(" ")
-            .joinToString(separator = " ") { it.capitalize() }
-            .replace(" ", divider)
+        payload.toCharArray()
+               .joinToString(separator = "") {
+                    val key: Char = it.toLowerCase()
+                    if (map.containsKey(key))
+                        if (it.isUpperCase()) (map[key] ?: "").capitalize() else map[key] ?: ""
+                    else
+                        it.toString()
+                }
+                .replace(" ", divider)
+
 
     fun toInitials(firstName: String?, lastName: String?): String? {
 
