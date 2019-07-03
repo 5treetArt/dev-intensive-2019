@@ -43,26 +43,30 @@ fun Date.humanizeDiff(date: Date = Date()): String {
     }
 
     return when(abs(diff)) {
-        in 0..(1 * SECOND) -> return when{
+        in 0..(1 * SECOND) -> when{
             diff >= 0 -> "только что"
             else -> "скоро"
         }
         in (1 * SECOND)..(45 * SECOND) -> String.format(format, "несколько секунд")
         in (45 * SECOND)..(75 * SECOND) -> String.format(format, "минуту")
-        in (75 * SECOND)..(45 * MINUTE) -> String.format(format, decline(diff, MINUTE, arrayOf("минут", "минуту", "минуты")))
+        in (75 * SECOND)..(45 * MINUTE) -> String.format(format, decline(diff, TimeUnits.MINUTE))
         in (45 * MINUTE)..(75 * MINUTE) -> String.format(format, "час")
-        in (75 * MINUTE)..(22 * HOUR) -> String.format(format, decline(diff, HOUR, arrayOf("часов", "час", "часа")))
+        in (75 * MINUTE)..(22 * HOUR) -> String.format(format, decline(diff, TimeUnits.HOUR))
         in (22 * HOUR)..(26 * HOUR) -> String.format(format, "день")
-        in (26 * HOUR)..(360 * DAY) -> String.format(format, decline(diff, DAY, arrayOf("дней", "день", "дня")))
-        else -> return when{
+        in (26 * HOUR)..(360 * DAY) -> String.format(format, decline(diff, TimeUnits.DAY))
+        else -> when{
             diff > 0 -> "более года назад"
             else -> "более чем через год"
         }
     }
 }
 
-fun decline(diff: Long, timeUnit: Long, cases: Array<String>): String {
-    val units = round(abs(diff).toDouble()/ timeUnit)
+
+private fun decline(diff: Long, timeUnit: TimeUnits): String {
+
+    val cases = declinedWords.getValue(timeUnit)
+
+    val units = round(abs(diff).toDouble()/ timeUnit.getInMillis())
 
     return when(units % 20) {
         0L -> "" + units + " " + cases[0]
@@ -73,9 +77,25 @@ fun decline(diff: Long, timeUnit: Long, cases: Array<String>): String {
     }
 }
 
+private val declinedWords = mapOf(
+    TimeUnits.SECOND to arrayOf("секунд", "секунду", "секунды"),
+    TimeUnits.MINUTE to arrayOf("минут", "минуту", "минуты"),
+    TimeUnits.HOUR to arrayOf("часов", "час", "часа"),
+    TimeUnits.DAY to arrayOf("дней", "день", "дня")
+)
+
 enum class TimeUnits{
     SECOND,
     MINUTE,
     HOUR,
     DAY
+}
+
+fun TimeUnits.plural(value: Int): String = decline(value.toLong() * this.getInMillis(), this)
+
+private fun TimeUnits.getInMillis(): Long = when(this) {
+    TimeUnits.SECOND -> SECOND
+    TimeUnits.MINUTE -> MINUTE
+    TimeUnits.HOUR -> HOUR
+    TimeUnits.DAY -> DAY
 }
