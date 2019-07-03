@@ -88,10 +88,10 @@ enum class TimeUnits{
     SECOND,
     MINUTE,
     HOUR,
-    DAY
-}
+    DAY;
 
-fun TimeUnits.plural(value: Int): String = decline(value.toLong() * this.getInMillis(), this)
+    fun plural(value: Int): String = decline(value.toLong() * this.getInMillis(), this)
+}
 
 private fun TimeUnits.getInMillis(): Long = when(this) {
     TimeUnits.SECOND -> SECOND
