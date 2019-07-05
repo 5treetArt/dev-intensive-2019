@@ -3,10 +3,10 @@ package ru.skillbranch.devintensive.extensions
 fun String.truncate(len: Int = 16): String {
     val trimmedStr = this.trim()
 
-    if (trimmedStr.length - 1 <= len)
+    if (trimmedStr.length <= len)
         return trimmedStr
 
-    return trimmedStr.substring(0, len + 1) + "..."
+    return trimmedStr.substring(0, len).trim() + "..."
 }
 
 fun String.stripHtml(): String = this.replace(htmlTags, "").replace(manyWhitespaces, " ")
