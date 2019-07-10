@@ -20,13 +20,13 @@ object Utils {
     fun transliteration(payload: String, divider:String = " "): String =
         payload.toCharArray()
                .joinToString(separator = "") {
-                    val key: Char = it.toLowerCase()
-                    if (map.containsKey(key))
-                        if (it.isUpperCase()) (map[key] ?: "").capitalize() else map[key] ?: ""
-                    else
-                        it.toString()
-                }
-                .replace(" ", divider)
+                   val key: Char = it.toLowerCase()
+                   if (map.containsKey(key))
+                       if (it.isUpperCase()) (map[key] ?: "").capitalize() else map[key] ?: ""
+                   else
+                       it.toString()
+               }
+               .replace(" ", divider)
 
 
     fun toInitials(firstName: String?, lastName: String?): String? {
