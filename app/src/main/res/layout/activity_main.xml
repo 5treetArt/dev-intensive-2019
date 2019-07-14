@@ -39,16 +39,16 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:lines="1"
+                android:singleLine="true"
+                android:imeOptions="actionDone"
                 android:textColor="@color/color_gray_light"
                 android:textColorHint="@color/color_gray_light"
                 android:hint="Введите текст"
-                android:imeOptions="actionDone"
                 android:paddingTop="@dimen/spacing_normal_16"
                 android:paddingBottom="@dimen/spacing_normal_16"
                 android:layout_marginLeft="@dimen/spacing_normal_16"
                 android:layout_marginRight="@dimen/spacing_normal_16"
-        />
+        /><!--  android:lines="1"-->
 
         <ImageView
                 android:id="@+id/iv_send"
@@ -58,7 +58,6 @@
                 android:layout_gravity="center"
                 android:layout_marginRight="@dimen/spacing_normal_16"
         />
-
 
     </LinearLayout>
 

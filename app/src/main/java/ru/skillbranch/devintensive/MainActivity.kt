@@ -4,9 +4,7 @@ import android.graphics.Color
 import android.graphics.PorterDuff
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.os.PersistableBundle
 import android.util.Log
-import android.view.KeyEvent
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.widget.EditText
@@ -14,9 +12,10 @@ import android.widget.ImageView
 import android.widget.TextView
 import kotlinx.android.synthetic.main.activity_main.*
 import ru.skillbranch.devintensive.extensions.hideKeyboard
+import ru.skillbranch.devintensive.extensions.isKeyboardOpen
 import ru.skillbranch.devintensive.models.Bender
 
-class MainActivity : AppCompatActivity(), View.OnClickListener/*, TextView.OnEditorActionListener */{
+class MainActivity : AppCompatActivity(), View.OnClickListener{
 
     lateinit var benderImage: ImageView
     lateinit var textTxt: TextView
@@ -29,7 +28,6 @@ class MainActivity : AppCompatActivity(), View.OnClickListener/*, TextView.OnEdi
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        //benderImage = findViewById(R.id.iv_bender)
         benderImage = iv_bender
         textTxt = tv_text
         messagetEt = et_message
@@ -47,10 +45,13 @@ class MainActivity : AppCompatActivity(), View.OnClickListener/*, TextView.OnEdi
         textTxt.text = benderObj.askQuestion()
 
         sendBtn.setOnClickListener(this)
+        Log.d("M_MainActivity", "keyboardOpen = ${isKeyboardOpen()}")
 
-        messagetEt.setOnEditorActionListener { textView, actionId, keyEvent ->
-            if (actionId == EditorInfo.IME_ACTION_DONE){
-                onClick(iv_send)
+        //messagetEt.setImeActionLabel("Done", EditorInfo.IME_ACTION_DONE)
+        messagetEt.setOnEditorActionListener { editText, actionId, keyEvent ->
+            if (editText.id == R.id.et_message && actionId == EditorInfo.IME_ACTION_DONE){
+                Log.d("M_MainActivity", "keyboardOpen = ${isKeyboardOpen()}")
+                tellBender()
                 this.hideKeyboard()
                 true
             }else{
@@ -100,11 +101,15 @@ class MainActivity : AppCompatActivity(), View.OnClickListener/*, TextView.OnEdi
 
     override fun onClick(v: View?) {
         if(v?.id == R.id.iv_send) {
-            val (phrase, color) = benderObj.listenAnswer(messagetEt.text.toString().toLowerCase())
-            messagetEt.setText("")
-            val (r,g,b) = color
-            benderImage.setColorFilter(Color.rgb(r,g,b), PorterDuff.Mode.MULTIPLY)
-            textTxt.text = phrase
+            tellBender()
         }
+    }
+
+    fun tellBender() {
+        val (phrase, color) = benderObj.listenAnswer(messagetEt.text.toString())
+        messagetEt.setText("")
+        val (r,g,b) = color
+        benderImage.setColorFilter(Color.rgb(r,g,b), PorterDuff.Mode.MULTIPLY)
+        textTxt.text = phrase
     }
 }

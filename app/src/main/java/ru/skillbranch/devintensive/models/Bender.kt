@@ -14,16 +14,25 @@ class Bender(var status:Status = Status.NORMAL, var question: Question = Questio
 
     fun listenAnswer(answer:String) : Pair<String, Triple<Int, Int, Int>> {
         val error = question.validate(answer)
-
         if (error != null)
             return error + "\n${question.question}" to status.color
 
-        return if (question.answers.contains(answer)) {
+        //TODO говнокод
+        if (question == Question.IDLE)
+            return question.question to status.color
+
+        return if (question.answers.contains(answer.toLowerCase())) {
             question = question.nextQuestion()
             "Отлично - ты справился\n${question.question}" to status.color
         }else{
+            val prevStatus = status
             status = status.nextStatus()
-            "Это не правильный ответ!\n${question.question}" to status.color
+            var msg = ""
+            if (prevStatus.ordinal > status.ordinal){
+                question = Question.NAME
+                msg = ". Давай все по новой"
+            }
+            "Это неправильный ответ" + msg + "\n${question.question}" to status.color
         }
     }
 
@@ -100,7 +109,4 @@ class Bender(var status:Status = Status.NORMAL, var question: Question = Questio
 
         abstract fun validate(answer: String): String?
     }
-
-
-
 }
