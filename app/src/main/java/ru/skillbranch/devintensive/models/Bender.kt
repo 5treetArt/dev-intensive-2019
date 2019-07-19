@@ -72,7 +72,7 @@ class Bender(var status:Status = Status.NORMAL, var question: Question = Questio
         },
         MATERIAL("Из чего я сделан?", listOf("металл", "дерево", "metal", "iron", "wood")) {
             override fun validate(answer: String): String? =
-                if (!answer.isBlank() && answer.matches(Regex("[0-9]+")))
+                if (!answer.isBlank() && !answer.matches(Regex("[0-9]+")))
                     null
                 else
                     "Материал не должен содержать цифр"
