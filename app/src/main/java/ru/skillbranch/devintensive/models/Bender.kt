@@ -54,28 +54,28 @@ class Bender(var status:Status = Status.NORMAL, var question: Question = Questio
     enum class Question(var question:String, val answers:List<String>) {
         NAME("Как меня зовут?", listOf("бендер", "bender")) {
             override fun validate(answer: String): String? =
-                if (!answer.isBlank() && answer.first().isUpperCase())
-                    null
-                else
+                if (!answer.isBlank() && !answer.first().isUpperCase())
                     "Имя должно начинаться с заглавной буквы"
+                else
+                    null
 
             override fun nextQuestion(): Question = PROFESSION
         },
         PROFESSION("Назови мою профессию?", listOf("сгибальщик", "bender")) {
             override fun validate(answer: String): String? =
-                if (!answer.isBlank() && answer.first().isLowerCase())
-                    null
-                else
+                if (!answer.isBlank() && !answer.first().isLowerCase())
                     "Профессия должна начинаться со строчной буквы"
+                else
+                    null
 
             override fun nextQuestion(): Question = MATERIAL
         },
         MATERIAL("Из чего я сделан?", listOf("металл", "дерево", "metal", "iron", "wood")) {
             override fun validate(answer: String): String? =
-                if (!answer.isBlank() && !answer.matches(Regex("[0-9]+")))
-                    null
-                else
+                if (!answer.isBlank() && !answer.matches(Regex("^\\D+$")))
                     "Материал не должен содержать цифр"
+                else
+                    null
                 //Question.MATERIAL -> "Материал не должен содержать цифр"
 
 
@@ -83,19 +83,19 @@ class Bender(var status:Status = Status.NORMAL, var question: Question = Questio
         },
         BDAY("Когда меня создали?", listOf("2993")) {
             override fun validate(answer: String): String? =
-                if (!answer.isBlank() && answer.toIntOrNull() != null)
-                    null
-                else
+                if (!answer.isBlank() && answer.toIntOrNull() == null)
                     "Год моего рождения должен содержать только цифры"
+                else
+                    null
 
             override fun nextQuestion(): Question = SERIAL
         },
         SERIAL("Мой серийный номер?", listOf("2716057")) {
             override fun validate(answer: String): String? =
-                if (!answer.isBlank() && answer.length == 7 && answer.toIntOrNull() != null)
-                    null
-                else
+                if (!answer.isBlank() && answer.length == 7 && answer.toIntOrNull() == null)
                     "Серийный номер содержит только цифры, и их 7"
+                else
+                    null
 
             override fun nextQuestion(): Question = IDLE
         },
