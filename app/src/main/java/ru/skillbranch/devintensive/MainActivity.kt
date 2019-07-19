@@ -105,7 +105,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener{
         }
     }
 
-    fun tellBender() {
+    private fun tellBender() {
         val (phrase, color) = benderObj.listenAnswer(messagetEt.text.toString())
         messagetEt.setText("")
         val (r,g,b) = color
