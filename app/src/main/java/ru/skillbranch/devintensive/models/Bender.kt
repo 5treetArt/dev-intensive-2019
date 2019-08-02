@@ -14,7 +14,7 @@ class Bender(var status:Status = Status.NORMAL, var question: Question = Questio
 
     fun listenAnswer(answer:String) : Pair<String, Triple<Int, Int, Int>> {
         val error = question.validate(answer)
-        if (error != null)
+         if (error != null)
             return error + "\n${question.question}" to status.color
 
         //TODO говнокод
