@@ -18,6 +18,81 @@ import ru.skillbranch.devintensive.viewmodels.ProfileViewModel
 
 class ProfileActivity : AppCompatActivity(){
 
+    /* TODO SplashTheme
+Необходимо реализовать тему, отображаемую при загрузке приложения до момента создания Activity
+
+Реализуй SplashTheme в соответствии с макетами (@style/SplahTheme).
+Необходимо реализовать ее отображение при запуске приложения до момента создания Activity.
+Как только Activity будет создана, необходимо установить AppTheme
+*/
+
+    /* TODO Text Input Layout error
+    Необходимо реализовать вадидацию вводимых пользователем данных
+    в поле @id/et_repository на соответствие url валидному github аккаунту
+
+    Реализуй валидацию
+    (валидация должна происходить в процессе ввода данных)
+    вводимых пользователем данных в поле @id/et_repository на соответствие url валидному github аккаунту,
+    вводимое значение может быть пустой строкой или должно содержать
+    домен github.com (https://, www, https://www) и аккаунт пользователя
+    (пути для исключения прикреплены в ресурсах урока).
+    Если URL невалиден, выводить сообщение "Невалидный адрес репозитория"
+    в TextInputLayout (wr_repository.error(message)) и запрещать
+    сохранение невалидного значения в SharedPreferences
+    (при попытке сохранить невалидное поле очищать et_repository при нажатии @id/btn_edit)
+
+    Пример:
+    https://github.com/johnDoe //валиден
+    https://www.github.com/johnDoe //валиден
+    www.github.com/johnDoe //валиден
+    github.com/johnDoe //валиден
+    https://anyDomain.github.com/johnDoe //невалиден
+    https://github.com/ //невалиден
+    https://github.com //невалиден
+    https://github.com/johnDoe/tree //невалиден
+    https://github.com/johnDoe/tree/something //невалиден
+    https://github.com/enterprise //невалиден
+    https://github.com/pricing //невалиден
+    https://github.com/join //невалиден
+
+
+    Пути:
+    enterprise
+
+    features
+
+    topics
+
+    collections
+
+    trending
+
+    events
+
+    marketplace
+
+    pricing
+
+    nonprofit
+
+    customer-stories
+
+    security
+
+    login
+
+    join
+*/
+
+    /*TODO Преобразование Инициалов в Drawable
+    Необходимо реализовать программное преобразование
+    инициалов пользователя в Drawable с цветным фоном и буквами
+
+    Реализуй программное преобразование инициалов пользователя
+    (если доступны - заполнено хотя бы одно поле) в Drawable
+    с фоном colorAccent (c учетом темы) и буквами инициалов (colorWhite)
+    и установи полученное изображение как изображение по умолчанию для профиля пользователя*/
+
     companion object {
         const val IS_EDIT_MODE = "IS_EDIT_MODE"
     }
