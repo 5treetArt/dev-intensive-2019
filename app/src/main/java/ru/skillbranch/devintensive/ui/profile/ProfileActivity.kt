@@ -102,7 +102,6 @@ class ProfileActivity : AppCompatActivity(){
 
     lateinit var viewFields : Map<String, TextView>
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         //TODO set custom Theme here before super and setContentView
 
