@@ -11,6 +11,7 @@ import android.graphics.Bitmap
 import android.graphics.Shader
 import android.graphics.BitmapShader
 import android.graphics.Color.parseColor
+import android.util.TypedValue
 import android.view.View
 import androidx.annotation.ColorRes
 import androidx.annotation.Dimension
@@ -50,6 +51,7 @@ class CircleImageView @JvmOverloads constructor(
 
 
     private var cv_borderColor = DEFAULT_BORDER_COLOR
+    private var borderWidthInPixels = 0F
     private var cv_borderWidth = DEFAULT_BORDER_WIDTH
 
     private var viewWidth: Int = 0
@@ -63,6 +65,7 @@ class CircleImageView @JvmOverloads constructor(
             val a = context.obtainStyledAttributes(attrs, R.styleable.CircleImageView)
             cv_borderColor = a.getColor(R.styleable.CircleImageView_cv_borderColor, DEFAULT_BORDER_COLOR)
             cv_borderWidth = a.getDimension(R.styleable.CircleImageView_cv_borderWidth, DEFAULT_BORDER_WIDTH)
+            borderWidthInPixels = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, cv_borderWidth, context.resources.displayMetrics)
             a.recycle()
         }
         setup()
@@ -79,15 +82,16 @@ class CircleImageView @JvmOverloads constructor(
     }
 
     @Dimension fun getBorderWidth(): Int{
-        return cv_borderWidth.toInt()
+        return borderWidthInPixels.toInt()
     }
 
     fun setBorderWidth(@Dimension dp: Int) {
         cv_borderWidth = dp.toFloat()
+        borderWidthInPixels = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, cv_borderWidth, context.resources.displayMetrics)
         invalidate()
     }
 
-    fun getBorderColor():Int{
+    fun getBorderColor():Int {
         return cv_borderColor
     }
 
