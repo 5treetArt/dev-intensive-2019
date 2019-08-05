@@ -1,12 +1,21 @@
 package ru.skillbranch.devintensive.ui.custom
 
+import android.annotation.SuppressLint
 import android.content.Context
-import android.graphics.Color
 import android.util.AttributeSet
 import android.widget.ImageView
+import ru.skillbranch.devintensive.R
+import android.graphics.drawable.BitmapDrawable
+import android.graphics.*
+import android.graphics.Bitmap
+import android.graphics.Shader
+import android.graphics.BitmapShader
+import android.graphics.Color.parseColor
+import android.view.View
 import androidx.annotation.ColorRes
 import androidx.annotation.Dimension
-import ru.skillbranch.devintensive.R
+import androidx.core.graphics.drawable.toBitmap
+
 
 /*
 * CircleImageView
@@ -39,8 +48,15 @@ class CircleImageView @JvmOverloads constructor(
         private const val DEFAULT_BORDER_WIDTH = 2.0F
     }
 
+
     private var cv_borderColor = DEFAULT_BORDER_COLOR
     private var cv_borderWidth = DEFAULT_BORDER_WIDTH
+
+    private var viewWidth: Int = 0
+    private var viewHeight: Int = 0
+    private var paint: Paint? = null
+    private var paintBorder: Paint? = null
+    private var shader: BitmapShader? = null
 
     init {
         if(attrs != null){
@@ -49,25 +65,108 @@ class CircleImageView @JvmOverloads constructor(
             cv_borderWidth = a.getDimension(R.styleable.CircleImageView_cv_borderWidth, DEFAULT_BORDER_WIDTH)
             a.recycle()
         }
+        setup()
+    }
+
+    private fun setup() {
+        paint = Paint()
+        paint!!.isAntiAlias = true
+
+        paintBorder = Paint()
+        paintBorder!!.isAntiAlias = true
+        paintBorder!!.color = cv_borderColor
+        setLayerType(View.LAYER_TYPE_SOFTWARE, paintBorder)
     }
 
     @Dimension fun getBorderWidth(): Int{
-        TODO("implement me")
+        return cv_borderWidth.toInt()
     }
 
-    fun setBorderWidth(@Dimension dp: Int){
-        TODO("implement me")
+    fun setBorderWidth(@Dimension dp: Int) {
+        cv_borderWidth = dp.toFloat()
+        invalidate()
     }
 
     fun getBorderColor():Int{
-        TODO("implement me")
+        return cv_borderColor
     }
 
+    @SuppressLint("ResourceType")
     fun setBorderColor(hex:String){
-        TODO("implement me")
+        val color = parseColor(hex)
+        setBorderColor(color)
     }
 
     fun setBorderColor(@ColorRes colorId: Int){
-        TODO("implement me")
+        val paintBorder = paintBorder ?: return
+        cv_borderColor = colorId
+        paintBorder.color = cv_borderColor
+        invalidate()
     }
+
+
+    @SuppressLint("DrawAllocation")
+    override fun onDraw(canvas: Canvas) {
+
+        val drawable = drawable ?: return
+
+        if (width == 0 || height == 0) {
+            return
+        }
+
+        // load the bitmap
+        val image = when (drawable) {
+            is BitmapDrawable -> drawable.bitmap
+            else -> drawable.toBitmap()
+        }
+
+        if (image != null) {
+
+            // init shader
+            shader = BitmapShader(
+                Bitmap.createScaledBitmap(image, width, height, false),
+                Shader.TileMode.CLAMP,
+                Shader.TileMode.CLAMP
+            )
+
+            paint!!.shader = shader
+            val circleCenter = viewWidth / 2
+
+            canvas.drawCircle(
+                (circleCenter + cv_borderWidth),
+                (circleCenter + cv_borderWidth),
+                circleCenter + cv_borderWidth,
+                paintBorder!!
+            )
+            canvas.drawCircle(
+                (circleCenter + cv_borderWidth),
+                (circleCenter + cv_borderWidth),
+                circleCenter.toFloat(),
+                paint!!)
+        }
+    }
+
+    override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
+        val width = measureWidth(widthMeasureSpec)
+        val height = measureHeight(heightMeasureSpec)
+
+        viewWidth = (width - cv_borderWidth * 2).toInt()
+        viewHeight = (height - cv_borderWidth * 2).toInt()
+
+        setMeasuredDimension(width, height)
+    }
+
+    private fun measureWidth(measureSpec: Int): Int =
+        if (MeasureSpec.getMode(measureSpec) == MeasureSpec.EXACTLY) {
+            MeasureSpec.getSize(measureSpec)
+        } else {
+            viewWidth
+        }
+
+    private fun measureHeight(measureSpec: Int): Int =
+        if (MeasureSpec.getMode(measureSpec) == MeasureSpec.EXACTLY) {
+            MeasureSpec.getSize(measureSpec)
+        } else {
+            viewHeight
+        }// + 2  //(beware: ascent is a negative number)
 }
