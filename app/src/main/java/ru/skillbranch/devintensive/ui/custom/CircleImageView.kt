@@ -51,8 +51,8 @@ class CircleImageView @JvmOverloads constructor(
 
 
     private var cv_borderColor = DEFAULT_BORDER_COLOR
-    private var borderWidthInPixels = 0F
-    private var cv_borderWidth = DEFAULT_BORDER_WIDTH
+    //private var borderWidthInPixels = 0F
+    private var cv_borderWidth = convertDpToPx(DEFAULT_BORDER_WIDTH)
 
     private var viewWidth: Int = 0
     private var viewHeight: Int = 0
@@ -64,8 +64,8 @@ class CircleImageView @JvmOverloads constructor(
         if(attrs != null){
             val a = context.obtainStyledAttributes(attrs, R.styleable.CircleImageView)
             cv_borderColor = a.getColor(R.styleable.CircleImageView_cv_borderColor, DEFAULT_BORDER_COLOR)
-            cv_borderWidth = a.getDimension(R.styleable.CircleImageView_cv_borderWidth, DEFAULT_BORDER_WIDTH)
-            borderWidthInPixels = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, cv_borderWidth, context.resources.displayMetrics)
+            //cv_borderWidth = a.getDimension(R.styleable.CircleImageView_cv_borderWidth, DEFAULT_BORDER_WIDTH)
+            cv_borderWidth = a.getDimensionPixelSize(R.styleable.CircleImageView_cv_borderWidth, convertDpToPx(DEFAULT_BORDER_WIDTH))
             a.recycle()
         }
         setup()
@@ -82,12 +82,15 @@ class CircleImageView @JvmOverloads constructor(
     }
 
     @Dimension fun getBorderWidth(): Int{
-        return cv_borderWidth.toInt()
+        return convertPxToDp(cv_borderWidth).toInt()
     }
 
+    fun convertDpToPx(dp: Float): Int = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, context.resources.displayMetrics).toInt()
+
+    fun convertPxToDp(px: Int): Float = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_PX, px.toFloat(), context.resources.displayMetrics)
+
     fun setBorderWidth(@Dimension dp: Int) {
-        cv_borderWidth = dp.toFloat()
-        borderWidthInPixels = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, cv_borderWidth, context.resources.displayMetrics)
+        cv_borderWidth = convertDpToPx(dp.toFloat())
         invalidate()
     }
 
@@ -137,14 +140,14 @@ class CircleImageView @JvmOverloads constructor(
             val circleCenter = viewWidth / 2
 
             canvas.drawCircle(
-                (circleCenter + borderWidthInPixels),
-                (circleCenter + borderWidthInPixels),
-                circleCenter + borderWidthInPixels,
+                ((circleCenter + cv_borderWidth).toFloat()),
+                ((circleCenter + cv_borderWidth).toFloat()),
+                (circleCenter + cv_borderWidth).toFloat(),
                 paintBorder!!
             )
             canvas.drawCircle(
-                (circleCenter + borderWidthInPixels),
-                (circleCenter + borderWidthInPixels),
+                ((circleCenter + cv_borderWidth).toFloat()),
+                ((circleCenter + cv_borderWidth).toFloat()),
                 circleCenter.toFloat(),
                 paint!!)
         }
@@ -154,8 +157,8 @@ class CircleImageView @JvmOverloads constructor(
         val width = measureWidth(widthMeasureSpec)
         val height = measureHeight(heightMeasureSpec)
 
-        viewWidth = (width - borderWidthInPixels * 2).toInt()
-        viewHeight = (height - borderWidthInPixels * 2).toInt()
+        viewWidth = (width - cv_borderWidth * 2).toInt()
+        viewHeight = (height - cv_borderWidth * 2).toInt()
 
         setMeasuredDimension(width, height)
     }
