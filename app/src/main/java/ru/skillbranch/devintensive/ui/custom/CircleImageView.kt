@@ -19,6 +19,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.toBitmap
 import ru.skillbranch.devintensive.App
 import java.lang.Math.min
+import kotlin.math.roundToInt
 
 
 /*
@@ -71,7 +72,7 @@ class CircleImageView @JvmOverloads constructor(
             val a = context.obtainStyledAttributes(attrs, R.styleable.CircleImageView)
             borderColor = a.getColor(R.styleable.CircleImageView_cv_borderColor, DEFAULT_BORDER_COLOR)
             //borderWidth = a.getDimension(R.styleable.CircleImageView_cv_borderWidth, DEFAULT_BORDER_WIDTH)
-            borderWidth = a.getDimensionPixelSize(R.styleable.CircleImageView_cv_borderWidth, convertDpToPx(DEFAULT_BORDER_WIDTH).toInt()).toFloat()
+            borderWidth = a.getDimensionPixelSize(R.styleable.CircleImageView_cv_borderWidth, convertDpToPx(DEFAULT_BORDER_WIDTH).roundToInt()).toFloat()
             a.recycle()
         }
         //setup()
@@ -81,7 +82,7 @@ class CircleImageView @JvmOverloads constructor(
 
     fun convertPxToDp(px: Int): Float = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_PX, px.toFloat(), context.resources.displayMetrics)
 
-    fun getBorderWidth(): Int = convertPxToDp(borderWidth.toInt()).toInt()
+    fun getBorderWidth(): Int = convertPxToDp(borderWidth.toInt()).roundToInt()
 
     fun setBorderWidth(dp: Int) {
         borderWidth = convertDpToPx(dp.toFloat())
@@ -91,7 +92,7 @@ class CircleImageView @JvmOverloads constructor(
     fun getBorderColor(): Int = borderColor
 
     fun setBorderColor(hex: String) {
-        borderColor = Color.parseColor(hex)
+        borderColor = parseColor(hex)
         this.invalidate()
     }
 
@@ -173,105 +174,4 @@ class CircleImageView @JvmOverloads constructor(
 
         return outputBmp
     }
-
-    //private fun setup() {
-    //    paint = Paint()
-    //    paint!!.isAntiAlias = true
-//
-    //    paintBorder = Paint()
-    //    paintBorder!!.isAntiAlias = true
-    //    paintBorder!!.color = borderColor
-    //    setLayerType(View.LAYER_TYPE_SOFTWARE, paintBorder)
-    //}
-//
-    //@Dimension fun getBorderWidth(): Int{
-    //    return convertPxToDp(borderWidth).toInt()
-    //}
-
-
-//    fun setBorderWidth(@Dimension dp: Int) {
-//        borderWidth = convertDpToPx(dp.toFloat())
-//        invalidate()
-//    }
-//
-//    fun getBorderColor():Int {
-//        return borderColor
-//    }
-//
-//    @SuppressLint("ResourceType")
-//    fun setBorderColor(hex:String){
-//        val color = parseColor(hex)
-//        setBorderColor(color)
-//    }
-//
-//    fun setBorderColor(@ColorRes colorId: Int){
-//        borderColor = ContextCompat.getColor(App.applicationContext(), colorId)
-//        invalidate()
-//    }
-//
-//
-//    @SuppressLint("DrawAllocation")
-//    override fun onDraw(canvas: Canvas) {
-//
-//        val drawable = drawable ?: return
-//
-//        if (width == 0 || height == 0) {
-//            return
-//        }
-//
-//        // load the bitmap
-//        val image = when (drawable) {
-//            is BitmapDrawable -> drawable.bitmap
-//            else -> drawable.toBitmap()
-//        }
-//
-//        if (image != null) {
-//
-//            // init shader
-//            shader = BitmapShader(
-//                Bitmap.createScaledBitmap(image, width, height, false),
-//                Shader.TileMode.CLAMP,
-//                Shader.TileMode.CLAMP
-//            )
-//
-//            paint!!.shader = shader
-//            val circleCenter = viewWidth / 2
-//
-//            canvas.drawCircle(
-//                ((circleCenter + borderWidth).toFloat()),
-//                ((circleCenter + borderWidth).toFloat()),
-//                (circleCenter + borderWidth).toFloat(),
-//                paintBorder!!
-//            )
-//            canvas.drawCircle(
-//                ((circleCenter + borderWidth).toFloat()),
-//                ((circleCenter + borderWidth).toFloat()),
-//                circleCenter.toFloat(),
-//                paint!!)
-//        }
-//    }
-//
-//    override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
-//        val width = measureWidth(widthMeasureSpec)
-//        val height = measureHeight(heightMeasureSpec)
-//
-//        viewWidth = (width - borderWidth * 2).toInt()
-//        viewHeight = (height - borderWidth * 2).toInt()
-//
-//        setMeasuredDimension(width, height)
-//    }
-//
-//    private fun measureWidth(measureSpec: Int): Int =
-//        if (MeasureSpec.getMode(measureSpec) == MeasureSpec.EXACTLY) {
-//            MeasureSpec.getSize(measureSpec)
-//        } else {
-//            viewWidth
-//        }
-//
-//    private fun measureHeight(measureSpec: Int): Int =
-//        if (MeasureSpec.getMode(measureSpec) == MeasureSpec.EXACTLY) {
-//            MeasureSpec.getSize(measureSpec)
-//        } else {
-//            viewHeight
-//        }// + 2  //(beware: ascent is a negative number)
 }

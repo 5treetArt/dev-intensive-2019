@@ -1,13 +1,13 @@
 package ru.skillbranch.devintensive.ui.profile
 
-import android.graphics.ColorFilter
-import android.graphics.PorterDuff
-import android.graphics.PorterDuffColorFilter
+import android.content.Context
+import android.graphics.*
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
+import android.util.TypedValue
 import android.view.View
 import android.widget.EditText
 import android.widget.TextView
@@ -16,75 +16,12 @@ import androidx.lifecycle.ViewModelProviders
 import kotlinx.android.synthetic.main.activity_profile.*
 import ru.skillbranch.devintensive.R
 import ru.skillbranch.devintensive.models.Profile
+import ru.skillbranch.devintensive.ui.custom.TextBitmapBuilder
+import ru.skillbranch.devintensive.utils.Utils
 import ru.skillbranch.devintensive.viewmodels.ProfileViewModel
+import kotlin.math.roundToInt
 
 class ProfileActivity : AppCompatActivity(){
-
-    /* TODO SplashTheme
-Необходимо реализовать тему, отображаемую при загрузке приложения до момента создания Activity
-
-Реализуй SplashTheme в соответствии с макетами (@style/SplahTheme).
-Необходимо реализовать ее отображение при запуске приложения до момента создания Activity.
-Как только Activity будет создана, необходимо установить AppTheme
-*/
-
-    /* TODO Text Input Layout error
-    Необходимо реализовать вадидацию вводимых пользователем данных
-    в поле @id/et_repository на соответствие url валидному github аккаунту
-
-    Реализуй валидацию
-    (валидация должна происходить в процессе ввода данных)
-    вводимых пользователем данных в поле @id/et_repository на соответствие url валидному github аккаунту,
-    вводимое значение может быть пустой строкой или должно содержать
-    домен github.com (https://, www, https://www) и аккаунт пользователя
-    (пути для исключения прикреплены в ресурсах урока).
-    Если URL невалиден, выводить сообщение "Невалидный адрес репозитория"
-    в TextInputLayout (wr_repository.error(message)) и запрещать
-    сохранение невалидного значения в SharedPreferences
-    (при попытке сохранить невалидное поле очищать et_repository при нажатии @id/btn_edit)
-
-    Пример:
-    https://github.com/johnDoe //валиден
-    https://www.github.com/johnDoe //валиден
-    www.github.com/johnDoe //валиден
-    github.com/johnDoe //валиден
-    https://anyDomain.github.com/johnDoe //невалиден
-    https://github.com/ //невалиден
-    https://github.com //невалиден
-    https://github.com/johnDoe/tree //невалиден
-    https://github.com/johnDoe/tree/something //невалиден
-    https://github.com/enterprise //невалиден
-    https://github.com/pricing //невалиден
-    https://github.com/join //невалиден
-
-
-    Пути:
-    enterprise
-
-    features
-
-    topics
-
-    collections
-
-    trending
-
-    events
-
-    marketplace
-
-    pricing
-
-    nonprofit
-
-    customer-stories
-
-    security
-
-    login
-
-    join
-*/
 
     /*TODO Преобразование Инициалов в Drawable
     Необходимо реализовать программное преобразование
@@ -103,6 +40,7 @@ class ProfileActivity : AppCompatActivity(){
     var isEditMode = false
 
     lateinit var viewFields : Map<String, TextView>
+    private var userInitials: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         setTheme(R.style.AppTheme)
@@ -146,7 +84,33 @@ class ProfileActivity : AppCompatActivity(){
                 v.text = it[k].toString()
             }
         }
+
+        updateAvatar(profile)
     }
+
+    private fun updateAvatar(profile: Profile) {
+        Utils.toInitials(profile.firstName, profile.lastName)?.let {
+            if (it != userInitials) {
+                val avatar = getAvatarBitmap(it)
+                iv_avatar.setImageBitmap(avatar)
+            }
+        } ?: iv_avatar.setImageResource(R.drawable.avatar_default)
+    }
+
+    private fun getAvatarBitmap(text: String): Bitmap {
+        val color = TypedValue()
+        theme.resolveAttribute(R.attr.colorAccent, color, true)
+
+        return TextBitmapBuilder(iv_avatar.layoutParams.width, iv_avatar.layoutParams.height)
+            .setBackgroundColor(color.data)
+            .setText(text)
+            .setTextSize(convertSpToPx(this, 48))
+            .setTextColor(Color.WHITE)
+            .build()
+    }
+
+    private fun convertSpToPx(context: Context, sp: Int): Int =
+        TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, sp.toFloat(), context.resources.displayMetrics).roundToInt()
 
 
     private fun initViews(savedInstanceState: Bundle?) {
