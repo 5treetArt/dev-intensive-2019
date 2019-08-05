@@ -5,6 +5,8 @@ import android.graphics.PorterDuff
 import android.graphics.PorterDuffColorFilter
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
 import android.view.View
 import android.widget.EditText
@@ -121,6 +123,17 @@ class ProfileActivity : AppCompatActivity(){
         viewModel = ViewModelProviders.of(this).get(ProfileViewModel::class.java)
         viewModel.getProfileData().observe(this, Observer { updateUI(it) })
         viewModel.getTheme().observe(this, Observer { updateTheme(it) })
+        viewModel.getRepositoryError().observe(this, Observer { updateRepoError(it) })
+        viewModel.getIsRepoError().observe(this, Observer { updateRepository(it) })
+    }
+
+    private fun updateRepository(isError: Boolean) {
+        if (isError) et_repository.text.clear()
+    }
+
+    private fun updateRepoError(isError: Boolean) {
+        wr_repository.isErrorEnabled = isError
+        wr_repository.error = if (isError) "Невалидный адрес репозитория" else null
     }
 
     private fun updateTheme(mode: Int) {
@@ -154,6 +167,8 @@ class ProfileActivity : AppCompatActivity(){
 
 
         btn_edit.setOnClickListener {
+            viewModel.onRepoEditCompleted(wr_repository.isErrorEnabled)
+
             if (isEditMode) saveProfileInfo()
             isEditMode = !isEditMode
             showCurrentMode(isEditMode)
@@ -162,6 +177,14 @@ class ProfileActivity : AppCompatActivity(){
         btn_switch_theme.setOnClickListener {
             viewModel.switchTheme()
         }
+
+        et_repository.addTextChangedListener(object: TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) { }
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) { }
+            override fun afterTextChanged(s: Editable?) {
+                viewModel.onRepositoryChanged(s.toString())
+            }
+        })
     }
 
     private fun showCurrentMode(isEdit: Boolean) {

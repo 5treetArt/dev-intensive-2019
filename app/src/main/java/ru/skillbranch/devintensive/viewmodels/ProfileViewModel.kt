@@ -9,14 +9,27 @@ import ru.skillbranch.devintensive.models.Profile
 import ru.skillbranch.devintensive.repositories.PreferencesRepository
 
 class ProfileViewModel : ViewModel() {
+
+    companion object{
+        private val regexExceptions: String = arrayOf(
+            "enterprise", "features", "topics", "collections", "trending", "events", "marketplace", "pricing",
+            "nonprofit", "customer-stories", "security", "login", "join"
+        ).joinToString(separator = "|")
+
+        val regex = Regex("^(https:\\/\\/)?(www\\.)?(github\\.com\\/)(?!($regexExceptions)(?=\\/|\$))[a-zA-Z\\d](?:[a-zA-Z\\d]|-(?=[a-zA-Z\\d])){0,38}(\\/)?$")
+    }
     private val repository: PreferencesRepository = PreferencesRepository
     private val profileData = MutableLiveData<Profile>()
     private val appTheme = MutableLiveData<Int>()
+
+    private val repositoryError = MutableLiveData<Boolean>()
+    private val isRepoError = MutableLiveData<Boolean>()
 
     init {
         Log.d("M_ProfileViewModel","init view model")
         profileData.value = repository.getProfile()
         appTheme.value = repository.getAppTheme()
+
     }
 
     override fun onCleared() {
@@ -28,6 +41,11 @@ class ProfileViewModel : ViewModel() {
     fun getProfileData(): LiveData<Profile> = profileData
 
     fun getTheme(): LiveData<Int> = appTheme
+
+    fun getIsRepoError():LiveData<Boolean> = isRepoError
+
+    fun getRepositoryError(): LiveData<Boolean> = repositoryError
+
 
     fun saveProfileData(profile: Profile){
         repository.saveProfile(profile)
@@ -43,5 +61,19 @@ class ProfileViewModel : ViewModel() {
         }
         repository.saveAppTheme(appTheme.value!!)
 
+    }
+
+    fun onRepositoryChanged(repository: String) {
+        repositoryError.value = isValidateRepository(repository)
+    }
+
+
+    fun onRepoEditCompleted(isError: Boolean) {
+        isRepoError.value = isError
+    }
+
+    private fun isValidateRepository(repoText: String): Boolean {
+
+        return (repoText.isNotEmpty() && !regex.matches(repoText))
     }
 }
