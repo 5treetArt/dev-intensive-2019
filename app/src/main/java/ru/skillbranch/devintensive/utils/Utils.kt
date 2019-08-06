@@ -1,21 +1,13 @@
 package ru.skillbranch.devintensive.utils
 
-import java.lang.Exception
-
 object Utils {
-    fun parseFullName(fullName:String?):Pair<String?, String?>{
-        val parts : List<String>? = fullName?.split(" ")?.filter { s: String -> !s.isBlank() }
-
-        var firstName = parts?.getOrNull(0)
-        if (firstName == "")
-            firstName = null
-
-        var lastName = parts?.getOrNull(1)
-        if (lastName == "")
-            lastName = null
-
-        return firstName to lastName
-    }
+    fun parseFullName(fullName:String?):Pair<String?, String?> =
+        fullName?.split(" ")
+                ?.filter { !it.isBlank() }
+                ?.windowed(2, 2)
+                ?.map { it.getOrNull(0) to it.getOrNull(1) }
+                ?.getOrNull(0)
+                ?: null to null
 
     fun transliteration(payload: String, divider:String = " "): String =
         payload.toCharArray()
@@ -29,22 +21,17 @@ object Utils {
                .replace(" ", divider)
 
 
-    fun toInitials(firstName: String?, lastName: String?): String? {
+    fun toInitials(firstName: String?, lastName: String?): String? =
+        listOf(firstName, lastName)
+            .map { firstLetterOrNull(it) }
+            .fold("", {initials: String, letter -> if (letter == null) initials else initials.plus(letter.toUpperCase())})
+            .ifEmpty { null }
 
-        val firstLet = firstLetterOrNull(firstName)
-        val secondLet = firstLetterOrNull(lastName)
-
-        if (firstLet == null && secondLet == null)
-            return null
-
-        return ((firstLet ?: "").toString() + (secondLet ?: "").toString()).toUpperCase()
-    }
-
-    private fun firstLetterOrNull(str: String?): Char?{
+    private fun firstLetterOrNull(str: String?): Char? =
         if (!str.isNullOrBlank())
-            return str[0]
-        return null
-    }
+            str[0]
+        else
+            null
 
     private val map: Map<Char, String> = mapOf(
         'а' to "a",

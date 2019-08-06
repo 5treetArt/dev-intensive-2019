@@ -23,15 +23,6 @@ import kotlin.math.roundToInt
 
 class ProfileActivity : AppCompatActivity(){
 
-    /*TODO Преобразование Инициалов в Drawable
-    Необходимо реализовать программное преобразование
-    инициалов пользователя в Drawable с цветным фоном и буквами
-
-    Реализуй программное преобразование инициалов пользователя
-    (если доступны - заполнено хотя бы одно поле) в Drawable
-    с фоном colorAccent (c учетом темы) и буквами инициалов (colorWhite)
-    и установи полученное изображение как изображение по умолчанию для профиля пользователя*/
-
     companion object {
         const val IS_EDIT_MODE = "IS_EDIT_MODE"
     }
@@ -84,7 +75,6 @@ class ProfileActivity : AppCompatActivity(){
                 v.text = it[k].toString()
             }
         }
-
         updateAvatar(profile)
     }
 
@@ -110,7 +100,9 @@ class ProfileActivity : AppCompatActivity(){
     }
 
     private fun convertSpToPx(context: Context, sp: Int): Int =
-        TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, sp.toFloat(), context.resources.displayMetrics).roundToInt()
+        sp * context.resources.displayMetrics.scaledDensity.roundToInt()
+
+        //TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, sp.toFloat(), context.resources.displayMetrics).roundToInt()
 
 
     private fun initViews(savedInstanceState: Bundle?) {
@@ -127,7 +119,6 @@ class ProfileActivity : AppCompatActivity(){
 
         isEditMode = savedInstanceState?.getBoolean(IS_EDIT_MODE, false) ?: false
         showCurrentMode(isEditMode)
-
 
         btn_edit.setOnClickListener {
             viewModel.onRepoEditCompleted(wr_repository.isErrorEnabled)
