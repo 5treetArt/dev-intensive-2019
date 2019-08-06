@@ -11,6 +11,7 @@ import android.graphics.Bitmap
 import android.graphics.Shader
 import android.graphics.BitmapShader
 import android.graphics.Color.parseColor
+import android.graphics.drawable.Drawable
 import android.util.TypedValue
 import android.view.View
 import androidx.annotation.ColorRes
@@ -21,28 +22,6 @@ import ru.skillbranch.devintensive.App
 import java.lang.Math.min
 import kotlin.math.roundToInt
 
-
-/*
-* CircleImageView
-Необходимо реализовать CustomView для скругления установленного Drawable
-
-Реализуй CustomView с названием класса CircleImageView и кастомными xml атрибутами
-cv_borderColor (цвет границы (format="color") по умолчанию white)
-и cv_borderWidth (ширина границы (format="dimension") по умолчанию 2dp).
-CircleImageView должна превращать установленное изображение в круглое изображение с цветной рамкой,
-у CircleImageView должны быть реализованы методы
-
-@Dimension getBorderWidth():Int,
-setBorderWidth(@Dimension dp:Int),
-getBorderColor():Int,
-setBorderColor(hex:String),
-setBorderColor(@ColorRes colorId: Int).
-
-Используй CircleImageView как ImageView для аватара пользователя (@id/iv_avatar)
-*
-* */
-
-
 class CircleImageView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
@@ -52,17 +31,6 @@ class CircleImageView @JvmOverloads constructor(
         private const val DEFAULT_BORDER_COLOR =  Color.WHITE
         private const val DEFAULT_BORDER_WIDTH = 2.0F
     }
-
-
-    //private var borderColor = DEFAULT_BORDER_COLOR
-    ////private var borderWidthInPixels = 0F
-    //private var borderWidth = convertDpToPx(DEFAULT_BORDER_WIDTH)
-
-    private var viewWidth: Int = 0
-    private var viewHeight: Int = 0
-    private var paint: Paint? = null
-    private var paintBorder: Paint? = null
-    private var shader: BitmapShader? = null
 
     private var borderColor = DEFAULT_BORDER_COLOR
     private var borderWidth = convertDpToPx(DEFAULT_BORDER_WIDTH)
@@ -75,7 +43,6 @@ class CircleImageView @JvmOverloads constructor(
             borderWidth = a.getDimensionPixelSize(R.styleable.CircleImageView_cv_borderWidth, convertDpToPx(DEFAULT_BORDER_WIDTH).roundToInt()).toFloat()
             a.recycle()
         }
-        //setup()
     }
 
     fun convertDpToPx(dp: Float): Float = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, context.resources.displayMetrics)
@@ -102,7 +69,7 @@ class CircleImageView @JvmOverloads constructor(
     }
 
     override fun onDraw(canvas: Canvas) {
-        var bitmap = getBitmapFromDrawable() ?: return
+        var bitmap = getBitmapFromDrawable(drawable) ?: return
         if (width == 0 || height == 0) return
 
         bitmap = getScaledBitmap(bitmap, width)
@@ -120,7 +87,7 @@ class CircleImageView @JvmOverloads constructor(
         val strokeStart = strokeWidth / 2F
         val strokeEnd = squareBmp.width - strokeWidth / 2F
 
-        inCircle.set(strokeStart , strokeStart, strokeEnd, strokeEnd)
+        inCircle.set(strokeStart, strokeStart, strokeEnd, strokeEnd)
 
         val strokePaint = Paint(Paint.ANTI_ALIAS_FLAG)
         strokePaint.color = color
@@ -133,41 +100,35 @@ class CircleImageView @JvmOverloads constructor(
         return squareBmp
     }
 
-    private fun getCenterCroppedBitmap(bitmap: Bitmap, size: Int): Bitmap {
-        val cropStartX = (bitmap.width - size) / 2
-        val cropStartY = (bitmap.height - size) / 2
+    private fun getCenterCroppedBitmap(bitmap: Bitmap, size: Int): Bitmap =
+        Bitmap.createBitmap(bitmap,
+            (bitmap.width - size) / 2,
+            (bitmap.height - size) / 2,
+            size, size)
 
-        return Bitmap.createBitmap(bitmap, cropStartX, cropStartY, size, size)
-    }
 
-    private fun getScaledBitmap(bitmap: Bitmap, minSide: Int) : Bitmap {
-        return if (bitmap.width != minSide || bitmap.height != minSide) {
+    private fun getScaledBitmap(bitmap: Bitmap, minSide: Int) : Bitmap =
+        if (bitmap.width != minSide || bitmap.height != minSide) {
             val smallest = min(bitmap.width, bitmap.height).toFloat()
             val factor = smallest / minSide
             Bitmap.createScaledBitmap(bitmap, (bitmap.width / factor).toInt(), (bitmap.height / factor).toInt(), false)
         } else bitmap
-    }
 
-    private fun getBitmapFromDrawable(): Bitmap? {
-        if (drawable == null)
-            return null
+    private fun getBitmapFromDrawable(drawable: Drawable?): Bitmap? =
+        when(drawable){
+            null -> null
+            is BitmapDrawable -> drawable.bitmap
+            else -> drawable.toBitmap(drawable.intrinsicWidth, drawable.intrinsicHeight, Bitmap.Config.ARGB_8888)
+        }
 
-        if (drawable is BitmapDrawable)
-            return (drawable as BitmapDrawable).bitmap
-
-        return drawable.toBitmap(drawable.intrinsicWidth, drawable.intrinsicHeight, Bitmap.Config.ARGB_8888)
-    }
 
     private fun getCircleBitmap(bitmap: Bitmap): Bitmap {
         val smallest = min(bitmap.width, bitmap.height)
         val outputBmp = Bitmap.createBitmap(smallest, smallest, Bitmap.Config.ARGB_8888)
         val canvas = Canvas(outputBmp)
 
-        val paint = Paint()
+        val paint = Paint(Paint.ANTI_ALIAS_FLAG or Paint.FILTER_BITMAP_FLAG or Paint.DITHER_FLAG)
 
-        paint.isAntiAlias = true
-        paint.isFilterBitmap = true
-        paint.isDither = true
         canvas.drawCircle(smallest / 2F, smallest / 2F, smallest / 2F, paint)
         paint.xfermode = PorterDuffXfermode(PorterDuff.Mode.SRC_IN)
         canvas.drawBitmap(bitmap, 0F, 0F,  paint)
