@@ -40,16 +40,22 @@ class CircleImageView @JvmOverloads constructor(
             val a = context.obtainStyledAttributes(attrs, R.styleable.CircleImageView)
             borderColor = a.getColor(R.styleable.CircleImageView_cv_borderColor, DEFAULT_BORDER_COLOR)
             //borderWidth = a.getDimension(R.styleable.CircleImageView_cv_borderWidth, DEFAULT_BORDER_WIDTH)
-            borderWidth = a.getDimensionPixelSize(R.styleable.CircleImageView_cv_borderWidth, convertDpToPx(DEFAULT_BORDER_WIDTH).roundToInt()).toFloat()
+            borderWidth = a.getDimensionPixelSize(R.styleable.CircleImageView_cv_borderWidth, convertDpToPx(DEFAULT_BORDER_WIDTH))
             a.recycle()
         }
     }
 
-    fun convertDpToPx(dp: Float): Float = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, context.resources.displayMetrics)
 
-    fun convertPxToDp(px: Int): Float = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_PX, px.toFloat(), context.resources.displayMetrics)
+    fun convertPxToDp(px: Int): Int = (px / context.resources.displayMetrics.density).roundToInt()
 
-    fun getBorderWidth(): Int = convertPxToDp(borderWidth.toInt()).roundToInt()
+
+    fun convertDpToPx( dp: Float): Int = (dp * context.resources.displayMetrics.density).roundToInt()
+
+    //fun convertDpToPx(dp: Float): Float = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, context.resources.displayMetrics)
+
+    //fun convertPxToDp(px: Int): Float = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_PX, px.toFloat(), context.resources.displayMetrics)
+
+    fun getBorderWidth(): Int = convertPxToDp(borderWidth)
 
     fun setBorderWidth(dp: Int) {
         borderWidth = convertDpToPx(dp.toFloat())
