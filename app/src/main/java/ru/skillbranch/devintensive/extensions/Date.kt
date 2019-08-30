@@ -33,6 +33,13 @@ fun Date.humanizeDiff(date: Date = Date()): String {
     }
 }
 
+fun Date.shortFormat(): String? {
+    val pattern = if (this.isSameDay(Date())) "HH:mm" else "dd.MM.yy"
+    return format(pattern)
+}
+
+fun Date.isSameDay(date: Date): Boolean = this.time/ DAY == date.time/ DAY
+
 private fun getFormat(diff: Long): String = when (diff) {
     in 0..Long.MAX_VALUE -> "%s назад"
     else -> "через %s"
