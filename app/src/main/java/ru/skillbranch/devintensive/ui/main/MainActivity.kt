@@ -3,6 +3,8 @@ package ru.skillbranch.devintensive.ui.main
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.Menu
+import androidx.appcompat.widget.SearchView
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProviders
@@ -33,6 +35,27 @@ class MainActivity : AppCompatActivity() {
         initViewModel()
     }
 
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.menu_search, menu)
+        val searchItem = menu?.findItem(R.id.action_search)
+        val searchView = searchItem?.actionView as SearchView
+        searchView.queryHint = getString(R.string.main_search_hint)
+        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener{
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                viewModel.handleSearchQuery(query)
+                return true
+            }
+
+            override fun onQueryTextChange(query: String?): Boolean {
+                viewModel.handleSearchQuery(query)
+                return true
+            }
+
+        })
+        return super.onCreateOptionsMenu(menu)
+    }
+
     private fun initToolbar() {
         setSupportActionBar(toolbar)
     }
@@ -45,8 +68,9 @@ class MainActivity : AppCompatActivity() {
         val divider = DividerItemDecoration(this, DividerItemDecoration.VERTICAL)
         val touchCallback = ChatItemTouchHelperCallback(chatAdapter){chatIt ->
             viewModel.addToArchive(chatIt.id)
+            //TODO в ресурсы
             Snackbar.make(rv_chat_list, "Вы точно хотите добавить ${chatIt.title} в архив?", Snackbar.LENGTH_LONG)
-                .setAction("Нет"){ viewModel.restoreFromArchive(chatIt.id) }
+                .setAction(getString(R.string.main_snackbar_cancel)){ viewModel.restoreFromArchive(chatIt.id) }
                 .show()
         }
 

@@ -7,4 +7,7 @@
     <string name="profile_hint_last_name">Фамилия</string>
     <string name="profile_hint_first_name">Имя</string>
     <string name="menu_search_title">Поиск</string>
+    <string name="main_snackbar_cancel">отмена</string>
+    <string name="main_search_hint">Введите название чата</string>
+    <string name="group_search_hint">Введите имя пользователя</string>
 </resources>

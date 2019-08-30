@@ -44,10 +44,5 @@ class AvatarImageView @JvmOverloads constructor(
         }
     }
 
-    //override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
-    //    super.onMeasure(widthMeasureSpec, heightMeasureSpec)
-    //    setMeasuredDimension(widthMeasureSpec, heightMeasureSpec)
-    //}
-
     fun setInitials(initials: String){}
 }
