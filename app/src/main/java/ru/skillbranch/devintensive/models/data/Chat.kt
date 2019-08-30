@@ -16,21 +16,16 @@ data class Chat(
     var isArchived: Boolean = false
 ) {
     @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
-    fun unreadableMessageCount(): Int {
-        return 0
-        TODO("implement me")
-    }
+    fun unreadableMessageCount(): Int = messages.filter { !it.isReaded }.size
 
     @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
-    fun lastMessageDate(): Date? {
-        return Date()
-        TODO("implement me")
-    }
+    fun lastMessageDate(): Date? = messages.lastOrNull()?.date
 
     @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
     fun lastMessageShort(): Pair<String, String?> = when(val lastMessage = messages.lastOrNull()){
+        is TextMessage -> (lastMessage.text ?: "") to lastMessage.from.firstName
+        is ImageMessage -> "${lastMessage.from.firstName} - отправил фото" to lastMessage.from.firstName
         else -> "" to null
-            //TODO("implement me")
     }
 
     private fun isSingle(): Boolean = members.size == 1
@@ -54,7 +49,6 @@ data class Chat(
                 null,
                 "",
                 title,
-                //TODO если изменится lastMessage между вызовами lastMessageShort(), то сообщение будет приписано не тому пользователю
                 lastMessageShort().first,
                 unreadableMessageCount(),
                 lastMessageDate()?.shortFormat(),
