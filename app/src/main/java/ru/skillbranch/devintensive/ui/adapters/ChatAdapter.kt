@@ -11,6 +11,7 @@ import com.bumptech.glide.Glide
 import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.item_chat_group.*
 import kotlinx.android.synthetic.main.item_chat_single.*
+import kotlinx.android.synthetic.main.item_chat_archive.*
 import ru.skillbranch.devintensive.R
 import ru.skillbranch.devintensive.models.data.ChatItem
 import ru.skillbranch.devintensive.models.data.ChatType
@@ -36,7 +37,7 @@ class ChatAdapter(val listener: (ChatItem) -> Unit) : RecyclerView.Adapter<ChatA
         return when(viewType) {
             SINGLE_TYPE -> SingleViewHolder(inflater.inflate(R.layout.item_chat_single, parent, false))
             GROUP_TYPE -> GroupViewHolder(inflater.inflate(R.layout.item_chat_group, parent, false))
-            ARCHIVE_TYPE -> ArchiveViewHolder(inflater.inflate(R.layout.item_chat_group, parent, false))
+            ARCHIVE_TYPE -> ArchiveViewHolder(inflater.inflate(R.layout.item_chat_archive, parent, false))
             else -> SingleViewHolder(inflater.inflate(R.layout.item_chat_single, parent, false))
         }
     }
@@ -163,29 +164,19 @@ class ChatAdapter(val listener: (ChatItem) -> Unit) : RecyclerView.Adapter<ChatA
 
         override fun bind(item: ChatItem, listener: (ChatItem) -> Unit) {
 
-            with(iv_avatar_group){
-                setImageDrawable(
-                    convertView.resources.getDrawable(R.drawable.ic_archive_black_24dp,
-                        convertView.context.theme
-                    ))
-                setBackgroundColor(resources.getColor(R.color.color_gray_dark, convertView.context.theme))
-            }
-
-            tv_title_group.text = item.title// convertView.context.getString(R.string.chatitem_archive_title)
-
-            with(tv_date_group) {
+            with(tv_date_archive) {
                 visibility = if (item.lastMessageDate != null) View.VISIBLE else View.GONE
                 text = item.lastMessageDate
             }
 
-            with(tv_counter_group) {
+            with(tv_counter_archive) {
                 visibility = if (item.messageCount > 0) View.VISIBLE else View.GONE
                 text = item.messageCount.toString()
             }
 
-            tv_message_group.text = item.shortDescription
+            tv_message_archive.text = item.shortDescription
 
-            with(tv_message_author) {
+            with(tv_message_author_archive) {
                 visibility = if (item.author != null) View.VISIBLE else View.GONE
                 text = item.author
             }
