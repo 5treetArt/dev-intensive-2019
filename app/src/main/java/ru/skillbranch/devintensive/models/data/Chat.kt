@@ -24,7 +24,7 @@ data class Chat(
     @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
     fun lastMessageShort(): Pair<String, String?> = when(val lastMessage = messages.lastOrNull()){
         is TextMessage -> (lastMessage.text ?: "") to lastMessage.from.firstName
-        is ImageMessage -> "${lastMessage.from.firstName} - отправил фото" to lastMessage.from.firstName
+        is ImageMessage -> "${lastMessage.from.firstName} - отправил фото" to lastMessage.from.firstName  //TODO в ресурсы
         else -> "" to null
     }
 
@@ -55,6 +55,29 @@ data class Chat(
                 false,
                 ChatType.GROUP,
                 lastMessageShort().second
+            )
+        }
+    }
+
+    companion object {
+        fun archivedToChatItem(chats: List<Chat>): ChatItem{
+            val lastMsgChat = chats.maxWith (Comparator { chat0, chat1 ->
+                when{
+                    chat0?.lastMessageDate()?.time ?: 0 > chat1?.lastMessageDate()?.time ?: 0 -> 1
+                    chat0?.lastMessageDate()?.time ?: 0 < chat1?.lastMessageDate()?.time ?: 0 -> -1
+                    else -> 0
+                }})
+            return ChatItem(
+                "-1",
+                null,
+                "",
+                "Архив чатов",
+                lastMsgChat?.lastMessageShort()?.first,
+                chats.sumBy { it.unreadableMessageCount() },
+                lastMsgChat?.lastMessageDate()?.shortFormat(),
+                false,
+                ChatType.ARCHIVE,
+                lastMsgChat?.lastMessageShort()?.second
             )
         }
     }

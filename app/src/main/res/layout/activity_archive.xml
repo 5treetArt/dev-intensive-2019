@@ -15,27 +15,17 @@
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
-                app:popupTheme="@style/AppTheme.PopupOverlay">
-
-        </androidx.appcompat.widget.Toolbar>
+                app:popupTheme="@style/AppTheme.PopupOverlay"
+                app:title="@string/archive_toolbar_title"/>
 
     </com.google.android.material.appbar.AppBarLayout>
 
-
     <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rv_chat_list"
+            android:id="@+id/rv_archive_list"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginTop="?attr/actionBarSize"
-            tools:listitem="@layout/item_chat_single"/>
-
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/fab"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom|end"
-            android:layout_margin="@dimen/spacing_normal_16"
-            app:srcCompat="@drawable/ic_add_black_24dp"
-    />
+            tools:listitem="@layout/item_chat_single"
+            tools:itemCount="5"/>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

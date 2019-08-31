@@ -50,7 +50,6 @@ class GroupActivity : AppCompatActivity() {
                 viewModel.handleSearchQuery(query)
                 return true
             }
-
         })
         return super.onCreateOptionsMenu(menu)
     }

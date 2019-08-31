@@ -15,7 +15,8 @@
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
-                app:popupTheme="@style/AppTheme.PopupOverlay">
+                app:popupTheme="@style/AppTheme.PopupOverlay"
+                app:title="@string/group_toolbar_title">
 
         </androidx.appcompat.widget.Toolbar>
 
@@ -35,7 +36,8 @@
                 android:paddingRight="@dimen/spacing_normal_16"
                 android:layout_marginTop="@dimen/spacing_small_8"
                 android:layout_marginBottom="@dimen/spacing_small_8"
-                android:visibility="gone">
+                android:visibility="gone"
+                tools:visibility="visible">
 
         </com.google.android.material.chip.ChipGroup>
 
@@ -43,7 +45,8 @@
                 android:id="@+id/rv_user_list"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                tools:listitem="@layout/item_user_list">
+                tools:listitem="@layout/item_user_list"
+                tools:itemCount="5">
 
         </androidx.recyclerview.widget.RecyclerView>
 

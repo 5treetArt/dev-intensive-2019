@@ -10,4 +10,7 @@
     <string name="main_snackbar_cancel">отмена</string>
     <string name="main_search_hint">Введите название чата</string>
     <string name="group_search_hint">Введите имя пользователя</string>
+    <string name="archive_toolbar_title">Архив чатов</string>
+    <string name="group_toolbar_title">Создание группы</string>
+    <string name="chatitem_archive_title">Архив чатов</string>
 </resources>

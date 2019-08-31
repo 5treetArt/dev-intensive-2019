@@ -12,6 +12,7 @@ import ru.skillbranch.devintensive.models.data.ChatItem
 
 class ChatItemTouchHelperCallback(
     val adapter: ChatAdapter,
+    val icon: IconType = IconType.ARCHIVE_IN,
     val swipeListener: (ChatItem) -> Unit
 ) : ItemTouchHelper.Callback() {
 
@@ -21,7 +22,8 @@ class ChatItemTouchHelperCallback(
 
 
     override fun getMovementFlags(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder): Int {
-        return if(viewHolder is ItemTouchViewHolder) {
+        return if(viewHolder is ItemTouchViewHolder &&
+                  viewHolder !is ChatAdapter.ArchiveViewHolder) {
             makeFlag(ItemTouchHelper.ACTION_STATE_SWIPE, ItemTouchHelper.START)
         }else{
             makeFlag(ItemTouchHelper.ACTION_STATE_IDLE, ItemTouchHelper.START)
@@ -86,7 +88,12 @@ class ChatItemTouchHelperCallback(
     }
 
     private fun drawIcon(canvas: Canvas, itemView: View, dX: Float) {
-        val icon = itemView.resources.getDrawable(R.drawable.ic_archive_black_24dp, itemView.context.theme)
+        val icon = itemView.resources.getDrawable(
+            when(icon){
+                IconType.ARCHIVE_IN -> R.drawable.ic_archive_black_24dp
+                IconType.ARCHIVE_OUT -> R.drawable.ic_unarchive_black_24dp
+            },
+            itemView.context.theme)
         val iconSize = itemView.resources.getDimensionPixelSize(R.dimen.icon_size)
         val space = itemView.resources.getDimensionPixelSize(R.dimen.spacing_normal_16)
 
@@ -107,4 +114,9 @@ class ChatItemTouchHelperCallback(
 interface  ItemTouchViewHolder{
     fun onItemSelected()
     fun onItemCleared()
+}
+
+enum class IconType{
+    ARCHIVE_IN,
+    ARCHIVE_OUT,
 }
