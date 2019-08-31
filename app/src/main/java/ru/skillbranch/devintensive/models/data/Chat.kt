@@ -59,10 +59,10 @@ data class Chat(
         }
     }
 
-    fun getTitle(names: Pair<String?, String?>): String = when (names){
-        null to null -> ""
-        null to String -> names.second!!
-        String to null -> names.first!!
+    private fun getTitle(names: Pair<String?, String?>): String = when {
+        names.first == null && names.second == null -> ""
+        names.first == null && names.second != null-> names.second!!
+        names.first != null && names.second == null-> names.first!!
         else -> "${names.first} ${names.second}"
     }
 

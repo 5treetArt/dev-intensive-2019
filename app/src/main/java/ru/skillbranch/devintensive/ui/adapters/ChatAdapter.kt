@@ -128,7 +128,7 @@ class ChatAdapter(val listener: (ChatItem) -> Unit) : RecyclerView.Adapter<ChatA
         }
 
         override fun bind(item: ChatItem, listener: (ChatItem) -> Unit) {
-            iv_avatar_group.setInitials(item.initials)
+            //iv_avatar_group.setInitials(item.initials)
 
             with(tv_date_group) {
                 visibility = if (item.lastMessageDate != null) View.VISIBLE else View.GONE

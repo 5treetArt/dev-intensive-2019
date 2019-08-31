@@ -80,11 +80,14 @@ class ProfileActivity : AppCompatActivity(){
 
     private fun updateAvatar(profile: Profile) {
         Utils.toInitials(profile.firstName, profile.lastName)?.let {
-            if (it != userInitials) {
-                val avatar = getAvatarBitmap(it)
-                iv_avatar.setImageBitmap(avatar)
-            }
+            if (it != userInitials)
+                setInitials(it)
         } ?: iv_avatar.setImageResource(R.drawable.avatar_default)
+    }
+
+    fun setInitials(initials: String){
+        val avatar = getAvatarBitmap(initials)
+        iv_avatar.setImageBitmap(avatar)
     }
 
     private fun getAvatarBitmap(text: String): Bitmap {
