@@ -55,7 +55,7 @@ class MainViewModel : ViewModel() {
         chatRepository.update(chat.copy(isArchived = false))
     }
 
-    fun handleSearchQuery(text: String?) {
+    fun handleSearchQuery(text: String) {
         query.value = text
     }
 

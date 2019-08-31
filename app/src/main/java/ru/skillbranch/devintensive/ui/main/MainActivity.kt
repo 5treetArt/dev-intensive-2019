@@ -42,12 +42,12 @@ class MainActivity : AppCompatActivity() {
         searchView.queryHint = getString(R.string.main_search_hint)
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener{
             override fun onQueryTextSubmit(query: String?): Boolean {
-                viewModel.handleSearchQuery(query)
+                viewModel.handleSearchQuery(query ?: "")
                 return true
             }
 
             override fun onQueryTextChange(query: String?): Boolean {
-                viewModel.handleSearchQuery(query)
+                viewModel.handleSearchQuery(query ?: "")
                 return true
             }
 
