@@ -37,7 +37,7 @@ data class Chat(
                 id,
                 user.avatar,
                 Utils.toInitials(user.firstName, user.lastName) ?: "??",
-                "${user.firstName ?: ""} ${user.lastName ?: ""}",
+                getTitle(user.firstName to user.lastName),
                 lastMessageShort().first,
                 unreadableMessageCount(),
                 lastMessageDate()?.shortFormat(),
@@ -57,6 +57,13 @@ data class Chat(
                 lastMessageShort().second
             )
         }
+    }
+
+    fun getTitle(names: Pair<String?, String?>): String = when (names){
+        null to null -> ""
+        null to String -> names.second!!
+        String to null -> names.first!!
+        else -> "${names.first} ${names.second}"
     }
 
     companion object {
