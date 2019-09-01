@@ -2,17 +2,14 @@ package ru.skillbranch.devintensive.ui.custom
 
 import android.content.Context
 import android.graphics.*
-import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
 import android.util.AttributeSet
-import android.util.TypedValue
 import android.widget.ImageView
 import androidx.annotation.ColorRes
 import androidx.core.content.ContextCompat
-import androidx.core.graphics.drawable.toBitmap
-import kotlinx.android.synthetic.main.activity_profile.*
 import ru.skillbranch.devintensive.App
 import ru.skillbranch.devintensive.R
+import ru.skillbranch.devintensive.utils.Utils
 import kotlin.math.roundToInt
 
 class AvatarImageView @JvmOverloads constructor(
@@ -61,11 +58,24 @@ class AvatarImageView @JvmOverloads constructor(
         setImageBitmap(avatar)
     }
 
+    fun setAvatarDrawable(drawable: Drawable?){
+        val avatar = getAvatarBitmap(drawable)
+        setImageBitmap(avatar)
+    }
+
+    private fun getAvatarBitmap(drawable: Drawable?): Bitmap {
+        val bgColor = context.getColor(R.color.color_gray_dark)
+        return BitmapBuilder(layoutParams.width, layoutParams.height)
+            .setBackgroundColor(bgColor)
+            .setDrawable(drawable)
+            .build()
+    }
+
     private fun getAvatarBitmap(text: String): Bitmap {
 
         val bgColor = Color.parseColor(bgColors[text.hashCode() % bgColors.size])
 
-        return TextBitmapBuilder(layoutParams.width, layoutParams.height)
+        return BitmapBuilder(layoutParams.width, layoutParams.height)
             .setBackgroundColor(bgColor)
             .setText(text)
             .setTextSize(convertSpToPx(context, 12))
@@ -101,7 +111,7 @@ class AvatarImageView @JvmOverloads constructor(
     }
 
     override fun onDraw(canvas: Canvas) {
-        var bitmap = getBitmapFromDrawable(drawable)
+        var bitmap = Utils.getBitmapFromDrawable(drawable)
 
         if (bitmap == null || width == 0 || height == 0)
             return
@@ -116,12 +126,7 @@ class AvatarImageView @JvmOverloads constructor(
         canvas.drawBitmap(bitmap, 0F, 0F, null)
     }
 
-    private fun getBitmapFromDrawable(drawable: Drawable?): Bitmap? =
-        when(drawable){
-            null -> null
-            is BitmapDrawable -> drawable.bitmap
-            else -> drawable.toBitmap(drawable.intrinsicWidth, drawable.intrinsicHeight, Bitmap.Config.ARGB_8888)
-        }
+
 
     private fun getScaledBitmap(bitmap: Bitmap, minSide: Int) : Bitmap =
         if (bitmap.width != minSide || bitmap.height != minSide) {

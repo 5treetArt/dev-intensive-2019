@@ -164,6 +164,24 @@ class ChatAdapter(val listener: (ChatItem) -> Unit) : RecyclerView.Adapter<ChatA
 
         override fun bind(item: ChatItem, listener: (ChatItem) -> Unit) {
 
+            //with(iv_avatar_archive) {
+            //    setImageDrawable(resources.getDrawable(
+            //            R.drawable.ic_archive_black_24dp,
+            //            context.theme
+            //        ))
+            //    setBackgroundColor(resources.getColor(
+            //            R.color.color_gray_dark,
+            //            context.theme
+            //        ))
+            //}
+
+            with(iv_avatar_archive) {
+                setAvatarDrawable(resources.getDrawable(
+                    R.drawable.ic_archive_black_24dp,
+                    context.theme
+                ))
+            }
+
             with(tv_date_archive) {
                 visibility = if (item.lastMessageDate != null) View.VISIBLE else View.GONE
                 text = item.lastMessageDate

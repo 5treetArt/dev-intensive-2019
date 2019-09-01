@@ -1,5 +1,10 @@
 package ru.skillbranch.devintensive.utils
 
+import android.graphics.Bitmap
+import android.graphics.drawable.BitmapDrawable
+import android.graphics.drawable.Drawable
+import androidx.core.graphics.drawable.toBitmap
+
 object Utils {
     fun parseFullName(fullName:String?):Pair<String?, String?> =
         fullName?.split(" ")
@@ -67,4 +72,12 @@ object Utils {
         'э' to "e",
         'ю' to "yu",
         'я' to "ya")
+
+
+    public fun getBitmapFromDrawable(drawable: Drawable?): Bitmap? =
+        when(drawable){
+            null -> null
+            is BitmapDrawable -> drawable.bitmap
+            else -> drawable.toBitmap(drawable.intrinsicWidth, drawable.intrinsicHeight, Bitmap.Config.ARGB_8888)
+        }
 }

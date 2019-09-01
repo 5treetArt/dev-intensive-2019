@@ -16,7 +16,7 @@ import androidx.lifecycle.ViewModelProviders
 import kotlinx.android.synthetic.main.activity_profile.*
 import ru.skillbranch.devintensive.R
 import ru.skillbranch.devintensive.models.Profile
-import ru.skillbranch.devintensive.ui.custom.TextBitmapBuilder
+import ru.skillbranch.devintensive.ui.custom.BitmapBuilder
 import ru.skillbranch.devintensive.utils.Utils
 import ru.skillbranch.devintensive.viewmodels.ProfileViewModel
 import kotlin.math.roundToInt
@@ -94,7 +94,7 @@ class ProfileActivity : AppCompatActivity(){
         val color = TypedValue()
         theme.resolveAttribute(R.attr.colorAccent, color, true)
 
-        return TextBitmapBuilder(iv_avatar.layoutParams.width, iv_avatar.layoutParams.height)
+        return BitmapBuilder(iv_avatar.layoutParams.width, iv_avatar.layoutParams.height)
             .setBackgroundColor(color.data)
             .setText(text)
             .setTextSize(convertSpToPx(this, 48))
