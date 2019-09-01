@@ -85,7 +85,7 @@ class ProfileActivity : AppCompatActivity(){
         } ?: iv_avatar.setImageResource(R.drawable.avatar_default)
     }
 
-    fun setInitials(initials: String){
+    private fun setInitials(initials: String){
         val avatar = getAvatarBitmap(initials)
         iv_avatar.setImageBitmap(avatar)
     }

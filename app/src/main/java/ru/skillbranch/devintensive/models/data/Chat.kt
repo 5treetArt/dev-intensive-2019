@@ -78,7 +78,7 @@ data class Chat(
                 "-1",
                 null,
                 "",
-                "",
+                "Архив чатов",
                 lastMsgChat?.lastMessageShort()?.first,
                 chats.sumBy { it.unreadableMessageCount() },
                 lastMsgChat?.lastMessageDate()?.shortFormat(),

@@ -94,8 +94,12 @@ class CircleImageView @JvmOverloads constructor(
     private fun getScaledBitmap(bitmap: Bitmap, minSide: Int) : Bitmap =
         if (bitmap.width != minSide || bitmap.height != minSide) {
             val smallest = min(bitmap.width, bitmap.height).toFloat()
-            val factor = smallest / minSide
-            Bitmap.createScaledBitmap(bitmap, (bitmap.width / factor).toInt(), (bitmap.height / factor).toInt(), false)
+            //val factor = smallest / minSide
+            Bitmap.createScaledBitmap(
+                bitmap,
+                (bitmap.width * minSide / smallest).toInt(),
+                (bitmap.height * minSide / smallest).toInt(),
+                false)
         } else bitmap
 
     private fun getCenterCroppedBitmap(bitmap: Bitmap, size: Int): Bitmap =

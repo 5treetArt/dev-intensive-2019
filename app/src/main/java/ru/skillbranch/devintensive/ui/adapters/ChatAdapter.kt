@@ -128,7 +128,7 @@ class ChatAdapter(val listener: (ChatItem) -> Unit) : RecyclerView.Adapter<ChatA
         }
 
         override fun bind(item: ChatItem, listener: (ChatItem) -> Unit) {
-            //iv_avatar_group.setInitials(item.initials)
+            iv_avatar_group.setInitials(item.initials)
 
             with(tv_date_group) {
                 visibility = if (item.lastMessageDate != null) View.VISIBLE else View.GONE
@@ -153,7 +153,7 @@ class ChatAdapter(val listener: (ChatItem) -> Unit) : RecyclerView.Adapter<ChatA
         }
     }
 
-    inner class ArchiveViewHolder(val convertView: View) : ChatItemViewHolder(convertView), ItemTouchViewHolder {
+    inner class ArchiveViewHolder(convertView: View) : ChatItemViewHolder(convertView), ItemTouchViewHolder {
         override fun onItemSelected() {
             itemView.setBackgroundColor(Color.LTGRAY)
         }
@@ -179,6 +179,11 @@ class ChatAdapter(val listener: (ChatItem) -> Unit) : RecyclerView.Adapter<ChatA
             with(tv_message_author_archive) {
                 visibility = if (item.author != null) View.VISIBLE else View.GONE
                 text = "@${item.author}"
+            }
+
+            with(iv_avatar_archive){
+                setBackgroundColor(resources.getColor(R.color.color_gray_dark, context.theme))
+                setImageDrawable(resources.getDrawable(R.drawable.ic_archive_black_24dp, context.theme))
             }
 
             itemView.setOnClickListener {
