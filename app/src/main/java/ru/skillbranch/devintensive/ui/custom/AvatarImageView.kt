@@ -53,8 +53,9 @@ class AvatarImageView @JvmOverloads constructor(
         }
     }
 
-    fun setInitials(initials: String){
-        val avatar = getAvatarBitmap(initials)
+    fun setInitials(initials: String, salt: String = ""){
+        this.initials = initials
+        val avatar = getAvatarBitmap(initials, salt)
         setImageBitmap(avatar)
     }
 
@@ -71,9 +72,9 @@ class AvatarImageView @JvmOverloads constructor(
             .build()
     }
 
-    private fun getAvatarBitmap(text: String): Bitmap {
+    private fun getAvatarBitmap(text: String, salt: String): Bitmap {
 
-        val bgColor = Color.parseColor(bgColors[text.hashCode() % bgColors.size])
+        val bgColor = Color.parseColor(bgColors[(text.hashCode() + salt.hashCode()) % bgColors.size])
 
         return BitmapBuilder(layoutParams.width, layoutParams.height)
             .setBackgroundColor(bgColor)

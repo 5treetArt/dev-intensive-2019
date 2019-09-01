@@ -47,7 +47,7 @@ data class Chat(
             ChatItem(
                 id,
                 null,
-                "",
+                getInitialsFrom(title),
                 title,
                 lastMessageShort().first,
                 unreadableMessageCount(),
@@ -57,6 +57,13 @@ data class Chat(
                 lastMessageShort().second
             )
         }
+    }
+
+    private fun getInitialsFrom(title: String): String {
+        val members = title.split(", ")
+        val firstLetter = members.firstOrNull()?.firstOrNull()?.toString() ?: ""
+        val secondLetter = members.lastOrNull()?.firstOrNull()?.toString() ?: ""
+        return firstLetter + secondLetter
     }
 
     private fun getTitle(names: Pair<String?, String?>): String = when {

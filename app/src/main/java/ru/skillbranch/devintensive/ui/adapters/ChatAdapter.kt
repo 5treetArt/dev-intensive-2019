@@ -92,7 +92,7 @@ class ChatAdapter(val listener: (ChatItem) -> Unit) : RecyclerView.Adapter<ChatA
             if (item.avatar == null) {
                 Glide.with(itemView)
                     .clear(iv_avatar_single)
-                iv_avatar_single.setInitials(item.initials)
+                iv_avatar_single.setInitials(item.initials, item.id)
             } else {
                 Glide.with(itemView)
                     .load(item.avatar)
@@ -128,7 +128,7 @@ class ChatAdapter(val listener: (ChatItem) -> Unit) : RecyclerView.Adapter<ChatA
         }
 
         override fun bind(item: ChatItem, listener: (ChatItem) -> Unit) {
-            iv_avatar_group.setInitials(item.initials)
+            iv_avatar_group.setInitials(item.initials, item.id)
 
             with(tv_date_group) {
                 visibility = if (item.lastMessageDate != null) View.VISIBLE else View.GONE
@@ -164,21 +164,6 @@ class ChatAdapter(val listener: (ChatItem) -> Unit) : RecyclerView.Adapter<ChatA
 
         override fun bind(item: ChatItem, listener: (ChatItem) -> Unit) {
 
-            //with(iv_avatar_archive) {
-            //    setImageDrawable(resources.getDrawable(
-            //            R.drawable.ic_archive_black_24dp,
-            //            context.theme
-            //        ))
-            //    setBackgroundColor(resources.getColor(
-            //            R.color.color_gray_dark,
-            //            context.theme
-            //        ))
-            //}
-
-            //with(iv_avatar_archive){
-            //    setBackgroundColor(resources.getColor(R.color.color_gray_dark, context.theme))
-            //    setImageDrawable(resources.getDrawable(R.drawable.ic_archive_black_24dp, context.theme))
-            //}
             with(iv_avatar_archive) {
                 setAvatarDrawable(resources.getDrawable(
                     R.drawable.ic_archive_black_24dp,
