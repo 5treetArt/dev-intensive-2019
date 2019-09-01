@@ -175,6 +175,10 @@ class ChatAdapter(val listener: (ChatItem) -> Unit) : RecyclerView.Adapter<ChatA
             //        ))
             //}
 
+            //with(iv_avatar_archive){
+            //    setBackgroundColor(resources.getColor(R.color.color_gray_dark, context.theme))
+            //    setImageDrawable(resources.getDrawable(R.drawable.ic_archive_black_24dp, context.theme))
+            //}
             with(iv_avatar_archive) {
                 setAvatarDrawable(resources.getDrawable(
                     R.drawable.ic_archive_black_24dp,
@@ -197,11 +201,6 @@ class ChatAdapter(val listener: (ChatItem) -> Unit) : RecyclerView.Adapter<ChatA
             with(tv_message_author_archive) {
                 visibility = if (item.author != null) View.VISIBLE else View.GONE
                 text = "@${item.author}"
-            }
-
-            with(iv_avatar_archive){
-                setBackgroundColor(resources.getColor(R.color.color_gray_dark, context.theme))
-                setImageDrawable(resources.getDrawable(R.drawable.ic_archive_black_24dp, context.theme))
             }
 
             itemView.setOnClickListener {

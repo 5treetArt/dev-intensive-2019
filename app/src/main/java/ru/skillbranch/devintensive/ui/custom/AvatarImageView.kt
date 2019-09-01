@@ -58,12 +58,12 @@ class AvatarImageView @JvmOverloads constructor(
         setImageBitmap(avatar)
     }
 
-    fun setAvatarDrawable(drawable: Drawable?){
+    fun setAvatarDrawable(drawable: Drawable){
         val avatar = getAvatarBitmap(drawable)
         setImageBitmap(avatar)
     }
 
-    private fun getAvatarBitmap(drawable: Drawable?): Bitmap {
+    private fun getAvatarBitmap(drawable: Drawable): Bitmap {
         val bgColor = context.getColor(R.color.color_gray_dark)
         return BitmapBuilder(layoutParams.width, layoutParams.height)
             .setBackgroundColor(bgColor)

@@ -22,7 +22,7 @@ class BitmapBuilder(val width: Int, val height: Int) {
     fun setTextColor(@ColorInt color: Int) = this.apply { textColor = color }
     fun setText(text: String) = this.apply { this.text = text }
     fun setTextSize(@Dimension(unit = PX) size: Int) = this.apply { textSize = size }
-    fun setDrawable(imageDrawable: Drawable?) = this.apply { drawable = imageDrawable }
+    fun setDrawable(imageDrawable: Drawable) = this.apply { drawable = imageDrawable }
 
     fun build(): Bitmap {
         val canvas = Canvas(bitmap)
@@ -39,10 +39,15 @@ class BitmapBuilder(val width: Int, val height: Int) {
 
     private fun drawImage(canvas: Canvas) {
         val paint = Paint(Paint.ANTI_ALIAS_FLAG)
+        val bitmap = Utils.getBitmapFromDrawable(drawable)!!
+
+        val left = (width - bitmap.getScaledWidth(canvas)).toFloat()/2
+        val top = (height - bitmap.getScaledHeight(canvas)).toFloat()/2
+
         canvas.drawBitmap(
             Utils.getBitmapFromDrawable(drawable)!!,
-            width.toFloat(),
-            height.toFloat(),
+            left,
+            top,
             paint
         )
     }
