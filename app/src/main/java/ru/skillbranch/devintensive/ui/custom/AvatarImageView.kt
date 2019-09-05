@@ -47,7 +47,7 @@ class AvatarImageView @JvmOverloads constructor(
             borderColor = a.getColor(R.styleable.AvatarImageView_aiv_borderColor, DEFAULT_BORDER_COLOR)
             borderWidth = a.getDimensionPixelSize(
                 R.styleable.AvatarImageView_aiv_borderWidth,
-                convertDpToPx(DEFAULT_BORDER_WIDTH)
+                Utils.convertDpToPx(DEFAULT_BORDER_WIDTH, context)
             ).toFloat()
             a.recycle()
         }
@@ -79,23 +79,16 @@ class AvatarImageView @JvmOverloads constructor(
         return BitmapBuilder(layoutParams.width, layoutParams.height)
             .setBackgroundColor(bgColor)
             .setText(text)
-            .setTextSize(convertSpToPx(context, 12))
+            .setTextSize(Utils.convertSpToPx(context, 12))
             .setTextColor(Color.WHITE)
             .build()
     }
 
-    private fun convertSpToPx(context: Context, sp: Int): Int =
-        sp * context.resources.displayMetrics.scaledDensity.roundToInt()
 
-
-    fun convertPxToDp(px: Int): Int = (px / context.resources.displayMetrics.density).roundToInt()
-
-    fun convertDpToPx( dp: Float): Int = (dp * context.resources.displayMetrics.density).roundToInt()
-
-    fun getBorderWidth(): Int = convertPxToDp(borderWidth.toInt())
+    fun getBorderWidth(): Int = Utils.convertPxToDp(borderWidth.toInt(), context)
 
     fun setBorderWidth(dp: Int) {
-        borderWidth = convertDpToPx(dp.toFloat()).toFloat()
+        borderWidth = Utils.convertDpToPx(dp.toFloat(), context).toFloat()
         this.invalidate()
     }
 

@@ -1,14 +1,18 @@
 package ru.skillbranch.devintensive.ui.adapters
 
+import android.animation.ArgbEvaluator
 import android.graphics.Canvas
 import android.graphics.Paint
 import android.graphics.Rect
 import android.graphics.RectF
+import android.util.TypedValue
 import android.view.View
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import ru.skillbranch.devintensive.R
+import ru.skillbranch.devintensive.extensions.toBytesArray
 import ru.skillbranch.devintensive.models.data.ChatItem
+import kotlin.math.absoluteValue
 
 class ChatItemTouchHelperCallback(
     val adapter: ChatAdapter,
@@ -19,7 +23,9 @@ class ChatItemTouchHelperCallback(
     private val bgRect = RectF()
     private val bgPaint = Paint(Paint.ANTI_ALIAS_FLAG)
     private val iconBounds =  Rect()
-
+    private val evaluator = ArgbEvaluator()
+    private val initColor = TypedValue()
+    private val finishColor = TypedValue()
 
     override fun getMovementFlags(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder): Int {
         return if(viewHolder is ItemTouchViewHolder &&
@@ -80,12 +86,45 @@ class ChatItemTouchHelperCallback(
             bottom = itemView.bottom.toFloat()
         }
 
-        with(bgPaint){
-            color = itemView.resources.getColor(R.color.color_primary_dark, itemView.context.theme)
-        }
+        itemView.context.theme.resolveAttribute(R.attr.colorInitialSwipe, initColor, true)
+        itemView.context.theme.resolveAttribute(R.attr.colorFinishSwipe, finishColor, true)
+
+        bgPaint.color = evaluator.evaluate(
+                dX.absoluteValue / itemView.width.toFloat(),
+                initColor.data,
+                finishColor.data
+            ) as? Int ?: initColor.data
 
         canvas.drawRect(bgRect, bgPaint)
     }
+
+ /*   private fun interpolateColor(width: Int, dX: Float, initialColor: Int, finishColor: Int): Int {
+
+        val initialColorBytes = initialColor.toBytesArray()
+        val initialOpaque = initialColorBytes[3]
+        val initialRed = initialColorBytes[2]
+        val initialGreen = initialColorBytes[1]
+        val initialBlue = initialColorBytes[0]
+
+        val finishColorBytes = finishColor.toBytesArray()
+        val finishOpaque = finishColorBytes[3]
+        val finishRed = finishColorBytes[2]
+        val finishGreen = finishColorBytes[1]
+        val finishBlue = finishColorBytes[0]
+
+        val currentOpaque = initialOpaque + (finishOpaque - initialOpaque)*(dX.absoluteValue/width.toFloat()).toInt()
+        val currentRed = initialRed + (finishRed - initialRed)*(dX.absoluteValue/width.toFloat()).toInt()
+        val currentGreen = initialGreen + (finishGreen - initialGreen)*(dX.absoluteValue/width.toFloat()).toInt()
+        val currentBlue = initialBlue + (finishBlue - initialBlue)*(dX.absoluteValue/width.toFloat()).toInt()
+
+        val currentColor =
+            currentBlue or
+            ((currentGreen shl 8) and 0x0000FF00) or
+            ((currentRed shl 16) and 0x00FF0000) or
+            ((currentOpaque shl 24).toLong() and 0xFF000000L).toInt()
+
+        return currentColor
+    }*/
 
     private fun drawIcon(canvas: Canvas, itemView: View, dX: Float) {
         val icon = itemView.resources.getDrawable(

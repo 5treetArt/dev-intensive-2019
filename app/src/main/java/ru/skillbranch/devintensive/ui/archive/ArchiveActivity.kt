@@ -2,12 +2,12 @@ package ru.skillbranch.devintensive.ui.archive
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.TypedValue
 import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.widget.SearchView
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
-import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.snackbar.Snackbar
@@ -17,6 +17,7 @@ import ru.skillbranch.devintensive.R
 import ru.skillbranch.devintensive.ui.adapters.ChatAdapter
 import ru.skillbranch.devintensive.ui.adapters.ChatItemTouchHelperCallback
 import ru.skillbranch.devintensive.ui.adapters.IconType
+import ru.skillbranch.devintensive.ui.custom.MaterialDividerItemDecorator
 import ru.skillbranch.devintensive.viewmodels.ArchiveViewModel
 
 class ArchiveActivity : AppCompatActivity() {
@@ -72,7 +73,14 @@ class ArchiveActivity : AppCompatActivity() {
         chatAdapter = ChatAdapter{
             Snackbar.make(rv_archive_list, "Click on ${it.title}", Snackbar.LENGTH_LONG).show()
         }
-        val divider = DividerItemDecoration(this, DividerItemDecoration.VERTICAL)
+
+        val dividerColor = TypedValue()
+        theme.resolveAttribute(R.attr.colorDivider, dividerColor, true)
+        val backgroundColor = TypedValue()
+        theme.resolveAttribute(R.attr.colorItemBackground, backgroundColor, true)
+
+        val divider = MaterialDividerItemDecorator(this@ArchiveActivity, dividerColor.data, backgroundColor.data)
+
         val touchCallback = ChatItemTouchHelperCallback(chatAdapter, IconType.ARCHIVE_OUT){ chatIt ->
             viewModel.restoreFromArchive(chatIt.id)
             //TODO в ресурсы

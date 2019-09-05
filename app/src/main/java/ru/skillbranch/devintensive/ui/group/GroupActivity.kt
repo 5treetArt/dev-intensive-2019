@@ -4,20 +4,20 @@ import android.content.res.ColorStateList
 import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.TypedValue
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.widget.SearchView
 import androidx.core.view.children
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProviders
-import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.chip.Chip
 import kotlinx.android.synthetic.main.activity_group.*
 import ru.skillbranch.devintensive.R
 import ru.skillbranch.devintensive.models.data.UserItem
+import ru.skillbranch.devintensive.ui.custom.MaterialDividerItemDecorator
 import ru.skillbranch.devintensive.ui.adapters.UserAdapter
 import ru.skillbranch.devintensive.viewmodels.GroupViewModel
 
@@ -72,7 +72,13 @@ class GroupActivity : AppCompatActivity() {
 
     private fun initViews() {
         userAdapter = UserAdapter { viewModel.handleSelectedItem(it.id) }
-        val divider = DividerItemDecoration(this, DividerItemDecoration.VERTICAL)
+
+        val dividerColor = TypedValue()
+        theme.resolveAttribute(R.attr.colorDivider, dividerColor, true)
+        val backgroundColor = TypedValue()
+        theme.resolveAttribute(R.attr.colorItemBackground, backgroundColor, true)
+
+        val divider = MaterialDividerItemDecorator(this@GroupActivity, dividerColor.data, backgroundColor.data)
         with(rv_user_list){
             adapter = userAdapter
             layoutManager = LinearLayoutManager(this@GroupActivity)
@@ -101,6 +107,10 @@ class GroupActivity : AppCompatActivity() {
     }
 
     private fun addChipToGroup(user: UserItem){
+
+        val color = TypedValue()
+        theme.resolveAttribute(R.attr.colorChip, color, true)
+
         val chip = Chip(this).apply {
             text = user.fullName
             chipIcon = resources.getDrawable(R.drawable.avatar_default, theme)
@@ -108,7 +118,7 @@ class GroupActivity : AppCompatActivity() {
             tag = user.id
             isClickable = true
             closeIconTint = ColorStateList.valueOf(Color.WHITE)
-            chipBackgroundColor = ColorStateList.valueOf(getColor(R.color.color_primary_dark))
+            chipBackgroundColor = ColorStateList.valueOf(color.data)
             setTextColor(Color.WHITE)
         }
         chip.setOnCloseIconClickListener{viewModel.handleRemoveChip(it.tag.toString())}

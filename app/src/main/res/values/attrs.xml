@@ -18,4 +18,21 @@
     <attr name="colorDivider" format="reference"/>
     <attr name="colorIcon" format="reference"/>
 
+    <!--<attr name="colorPrimary" format="reference"/>
+    <attr name="colorPrimaryDark" format="reference"/>
+    <attr name="colorAccent" format="reference"/>-->
+
+    <attr name="colorBackground" format="reference"/>
+    <attr name="colorItemBackground" format="reference"/>
+    <attr name="colorChip" format="reference"/>
+    <attr name="colorChipGroupBackground" format="reference"/>
+    <attr name="colorSnackbarText" format="reference"/>
+    <attr name="colorTitleText" format="reference"/>
+    <attr name="colorNicknameText" format="reference"/>
+    <attr name="colorSubtitleText" format="reference"/>
+    <attr name="colorKeyboard" format="reference"/>
+
+    <attr name="colorInitialSwipe" format="reference"/>
+    <attr name="colorFinishSwipe" format="reference"/>
+
 </resources>

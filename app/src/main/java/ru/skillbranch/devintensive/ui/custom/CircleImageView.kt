@@ -19,6 +19,8 @@ import androidx.annotation.Dimension
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.toBitmap
 import ru.skillbranch.devintensive.App
+import ru.skillbranch.devintensive.utils.Utils.convertDpToPx
+import ru.skillbranch.devintensive.utils.Utils.convertPxToDp
 import java.lang.Math.min
 import kotlin.math.roundToInt
 
@@ -33,26 +35,22 @@ class CircleImageView @JvmOverloads constructor(
     }
 
     private var borderColor = DEFAULT_BORDER_COLOR
-    private var borderWidth = convertDpToPx(DEFAULT_BORDER_WIDTH)
+    private var borderWidth = convertDpToPx(DEFAULT_BORDER_WIDTH, context)
 
     init {
         if(attrs != null){
             val a = context.obtainStyledAttributes(attrs, R.styleable.CircleImageView)
             borderColor = a.getColor(R.styleable.CircleImageView_cv_borderColor, DEFAULT_BORDER_COLOR)
-            borderWidth = a.getDimensionPixelSize(R.styleable.CircleImageView_cv_borderWidth, convertDpToPx(DEFAULT_BORDER_WIDTH))
+            borderWidth = a.getDimensionPixelSize(R.styleable.CircleImageView_cv_borderWidth, convertDpToPx(DEFAULT_BORDER_WIDTH, context))
             a.recycle()
         }
     }
 
 
-    fun convertPxToDp(px: Int): Int = (px / context.resources.displayMetrics.density).roundToInt()
-
-    fun convertDpToPx( dp: Float): Int = (dp * context.resources.displayMetrics.density).roundToInt()
-
-    fun getBorderWidth(): Int = convertPxToDp(borderWidth)
+    fun getBorderWidth(): Int = convertPxToDp(borderWidth, context)
 
     fun setBorderWidth(dp: Int) {
-        borderWidth = convertDpToPx(dp.toFloat())
+        borderWidth = convertDpToPx(dp.toFloat(), context)
         this.invalidate()
     }
 

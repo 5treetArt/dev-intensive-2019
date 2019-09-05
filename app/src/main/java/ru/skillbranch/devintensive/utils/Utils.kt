@@ -1,9 +1,11 @@
 package ru.skillbranch.devintensive.utils
 
+import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
 import androidx.core.graphics.drawable.toBitmap
+import kotlin.math.roundToInt
 
 object Utils {
     fun parseFullName(fullName:String?):Pair<String?, String?> =
@@ -73,6 +75,14 @@ object Utils {
         'ю' to "yu",
         'я' to "ya")
 
+
+    fun convertSpToPx(context: Context, sp: Int): Int =
+        sp * context.resources.displayMetrics.scaledDensity.roundToInt()
+
+
+    fun convertPxToDp(px: Int, context: Context): Int = (px / context.resources.displayMetrics.density).roundToInt()
+
+    fun convertDpToPx( dp: Float, context: Context): Int = (dp * context.resources.displayMetrics.density).roundToInt()
 
     public fun getBitmapFromDrawable(drawable: Drawable?): Bitmap? =
         when(drawable){

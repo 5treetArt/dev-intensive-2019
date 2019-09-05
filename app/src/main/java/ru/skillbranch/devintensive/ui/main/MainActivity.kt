@@ -3,19 +3,22 @@ package ru.skillbranch.devintensive.ui.main
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.TypedValue
 import android.view.Menu
 import androidx.appcompat.widget.SearchView
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
-import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.activity_main.*
 import ru.skillbranch.devintensive.R
+import ru.skillbranch.devintensive.extensions.setBackgroundDrawable
+import ru.skillbranch.devintensive.extensions.setTextColor
 import ru.skillbranch.devintensive.models.data.ChatType
 import ru.skillbranch.devintensive.ui.adapters.ChatAdapter
 import ru.skillbranch.devintensive.ui.adapters.ChatItemTouchHelperCallback
+import ru.skillbranch.devintensive.ui.custom.MaterialDividerItemDecorator
 import ru.skillbranch.devintensive.ui.archive.ArchiveActivity
 import ru.skillbranch.devintensive.ui.group.GroupActivity
 import ru.skillbranch.devintensive.viewmodels.MainViewModel
@@ -68,11 +71,22 @@ class MainActivity : AppCompatActivity() {
                 startActivity(intent)
             }
         }
-        val divider = DividerItemDecoration(this, DividerItemDecoration.VERTICAL)
+        val dividerColor = TypedValue()
+        theme.resolveAttribute(R.attr.colorDivider, dividerColor, true)
+        val backgroundColor = TypedValue()
+        theme.resolveAttribute(R.attr.colorItemBackground, backgroundColor, true)
+
+        val divider = MaterialDividerItemDecorator(this@MainActivity, dividerColor.data, backgroundColor.data)
+
         val touchCallback = ChatItemTouchHelperCallback(chatAdapter){chatIt ->
             viewModel.addToArchive(chatIt.id)
-            //TODO в ресурсы
+
+            val textColor = TypedValue()
+            theme.resolveAttribute(R.attr.colorSnackbarText, textColor, true)
+
             Snackbar.make(rv_chat_list, "Вы точно хотите добавить ${chatIt.title} в архив?", Snackbar.LENGTH_LONG)
+                .setBackgroundDrawable(R.drawable.bg_snackbar)
+                .setTextColor(textColor.data)
                 .setAction(getString(R.string.main_snackbar_cancel)){ viewModel.restoreFromArchive(chatIt.id) }
                 .show()
         }

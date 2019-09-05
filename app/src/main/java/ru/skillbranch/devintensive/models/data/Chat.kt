@@ -60,7 +60,7 @@ data class Chat(
     }
 
     private fun getInitialsFrom(title: String): String {
-        val members = title.split(", ")
+        val members = title.split(" ")
         val firstLetter = members.firstOrNull()?.firstOrNull()?.toString() ?: ""
         val secondLetter = members.lastOrNull()?.firstOrNull()?.toString() ?: ""
         return firstLetter + secondLetter

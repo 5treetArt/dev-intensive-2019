@@ -2,6 +2,7 @@ package ru.skillbranch.devintensive.ui.adapters
 
 import android.graphics.Color
 import android.util.Log
+import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -85,7 +86,9 @@ class ChatAdapter(val listener: (ChatItem) -> Unit) : RecyclerView.Adapter<ChatA
         }
 
         override fun onItemCleared() {
-            itemView.setBackgroundColor(Color.WHITE)
+            val color = TypedValue()
+            itemView.context.theme.resolveAttribute(R.attr.colorItemBackground, color, true)
+            itemView.setBackgroundColor(color.data)
         }
 
         override fun bind(item: ChatItem, listener: (ChatItem) -> Unit) {
@@ -124,7 +127,9 @@ class ChatAdapter(val listener: (ChatItem) -> Unit) : RecyclerView.Adapter<ChatA
         }
 
         override fun onItemCleared() {
-            itemView.setBackgroundColor(Color.WHITE)
+            val color = TypedValue()
+            itemView.context.theme.resolveAttribute(R.attr.colorItemBackground, color, true)
+            itemView.setBackgroundColor(color.data)
         }
 
         override fun bind(item: ChatItem, listener: (ChatItem) -> Unit) {
@@ -159,7 +164,9 @@ class ChatAdapter(val listener: (ChatItem) -> Unit) : RecyclerView.Adapter<ChatA
         }
 
         override fun onItemCleared() {
-            itemView.setBackgroundColor(Color.WHITE)
+            val color = TypedValue()
+            itemView.context.theme.resolveAttribute(R.attr.colorItemBackground, color, true)
+            itemView.setBackgroundColor(color.data)
         }
 
         override fun bind(item: ChatItem, listener: (ChatItem) -> Unit) {
