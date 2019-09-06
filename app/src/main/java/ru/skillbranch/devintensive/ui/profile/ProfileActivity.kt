@@ -53,11 +53,9 @@ class ProfileActivity : BaseActivity(){
         outState.putBoolean(IS_EDIT_MODE, isEditMode)
     }
 
-    override fun initViewModel(){
-        viewModel = ViewModelProviders.of(this).get(ProfileViewModel::class.java)
-        profileViewModel = viewModel as ProfileViewModel
-        super.initViewModel()
-
+    private fun initViewModel(){
+        profileViewModel = ViewModelProviders.of(this).get(ProfileViewModel::class.java)
+        super.initViewModel(this, profileViewModel)
         profileViewModel.getProfileData().observe(this, Observer { updateUI(it) })
         profileViewModel.getRepositoryError().observe(this, Observer { updateRepoError(it) })
         profileViewModel.getIsRepoError().observe(this, Observer { updateRepository(it) })

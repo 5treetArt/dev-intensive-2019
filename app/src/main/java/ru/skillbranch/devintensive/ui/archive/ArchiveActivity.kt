@@ -108,10 +108,9 @@ class ArchiveActivity : BaseActivity() {
         }
     }
 
-    override fun initViewModel() {
-        viewModel = ViewModelProviders.of(this).get(ArchiveViewModel::class.java)
-        archiveViewModel = viewModel as ArchiveViewModel
-        super.initViewModel()
+    private fun initViewModel() {
+        archiveViewModel = ViewModelProviders.of(this).get(ArchiveViewModel::class.java)
+        super.initViewModel(this, archiveViewModel)
         archiveViewModel.getChatData().observe(this, Observer { chatAdapter.updateData(it) })
     }
 

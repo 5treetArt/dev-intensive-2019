@@ -93,10 +93,9 @@ class GroupActivity : BaseActivity() {
         }
     }
 
-    override fun initViewModel() {
-        viewModel = ViewModelProviders.of(this).get(GroupViewModel::class.java)
-        groupViewModel = viewModel as GroupViewModel
-        super.initViewModel()
+    private fun initViewModel() {
+        groupViewModel = ViewModelProviders.of(this).get(GroupViewModel::class.java)
+        super.initViewModel(this, groupViewModel)
         groupViewModel.getUserData().observe(this, Observer { userAdapter.updateData(it) })
         groupViewModel.getSelectedData().observe(this, Observer {
             updateChips(it)

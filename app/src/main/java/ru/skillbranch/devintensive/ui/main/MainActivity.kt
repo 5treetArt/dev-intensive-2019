@@ -123,10 +123,9 @@ class MainActivity : BaseActivity() {
         }
     }
 
-    override fun initViewModel() {
-        viewModel = ViewModelProviders.of(this).get(MainViewModel::class.java)
-        mainViewModel = viewModel as MainViewModel
-        super.initViewModel()
+    private fun initViewModel() {
+        mainViewModel = ViewModelProviders.of(this).get(MainViewModel::class.java)
+        super.initViewModel(this, mainViewModel)
         mainViewModel.getChatData().observe(this, Observer { chatAdapter.updateData(it) })
     }
 }
