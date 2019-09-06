@@ -8,7 +8,7 @@ import androidx.lifecycle.ViewModel
 import ru.skillbranch.devintensive.models.Profile
 import ru.skillbranch.devintensive.repositories.PreferencesRepository
 
-class ProfileViewModel : ViewModel() {
+class ProfileViewModel : BaseViewModel() {
 
     companion object{
         private val regexExceptions: String = arrayOf(
@@ -20,7 +20,7 @@ class ProfileViewModel : ViewModel() {
     }
     private val repository: PreferencesRepository = PreferencesRepository
     private val profileData = MutableLiveData<Profile>()
-    private val appTheme = MutableLiveData<Int>()
+    //private val appTheme = MutableLiveData<Int>()
 
     private val repositoryError = MutableLiveData<Boolean>()
     private val isRepoError = MutableLiveData<Boolean>()
@@ -28,7 +28,7 @@ class ProfileViewModel : ViewModel() {
     init {
         Log.d("M_ProfileViewModel","init view model")
         profileData.value = repository.getProfile()
-        appTheme.value = repository.getAppTheme()
+        //appTheme.value = repository.getAppTheme()
 
     }
 
@@ -40,7 +40,7 @@ class ProfileViewModel : ViewModel() {
 
     fun getProfileData(): LiveData<Profile> = profileData
 
-    fun getTheme(): LiveData<Int> = appTheme
+    //fun getTheme(): LiveData<Int> = appTheme
 
     fun getIsRepoError():LiveData<Boolean> = isRepoError
 

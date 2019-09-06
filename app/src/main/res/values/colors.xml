@@ -28,6 +28,8 @@
     <color name="color_gray">#9CA9BA</color>
     <color name="color_gray_dark">#675F7F</color>
     <color name="color_gray_light">#ECECEC</color>
+    <color name="color_gray_light2">#CCCCCC</color>
+
 
     <color name="color_divider_1">#BAB399</color>
     <color name="color_indicator">#581F99</color>

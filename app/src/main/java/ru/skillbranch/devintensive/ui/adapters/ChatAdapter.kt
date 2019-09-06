@@ -82,7 +82,9 @@ class ChatAdapter(val listener: (ChatItem) -> Unit) : RecyclerView.Adapter<ChatA
 
     inner class SingleViewHolder(convertView: View) : ChatItemViewHolder(convertView), ItemTouchViewHolder {
         override fun onItemSelected() {
-            itemView.setBackgroundColor(Color.LTGRAY)
+            val color = TypedValue()
+            itemView.context.theme.resolveAttribute(R.attr.colorItemSelected, color, true)
+            itemView.setBackgroundColor(color.data)
         }
 
         override fun onItemCleared() {
@@ -123,7 +125,9 @@ class ChatAdapter(val listener: (ChatItem) -> Unit) : RecyclerView.Adapter<ChatA
 
     inner class GroupViewHolder(convertView: View) : ChatItemViewHolder(convertView), ItemTouchViewHolder {
         override fun onItemSelected() {
-            itemView.setBackgroundColor(Color.LTGRAY)
+            val color = TypedValue()
+            itemView.context.theme.resolveAttribute(R.attr.colorItemSelected, color, true)
+            itemView.setBackgroundColor(color.data)
         }
 
         override fun onItemCleared() {
@@ -160,7 +164,9 @@ class ChatAdapter(val listener: (ChatItem) -> Unit) : RecyclerView.Adapter<ChatA
 
     inner class ArchiveViewHolder(convertView: View) : ChatItemViewHolder(convertView), ItemTouchViewHolder {
         override fun onItemSelected() {
-            itemView.setBackgroundColor(Color.LTGRAY)
+            val color = TypedValue()
+            itemView.context.theme.resolveAttribute(R.attr.colorItemSelected, color, true)
+            itemView.setBackgroundColor(color.data)
         }
 
         override fun onItemCleared() {

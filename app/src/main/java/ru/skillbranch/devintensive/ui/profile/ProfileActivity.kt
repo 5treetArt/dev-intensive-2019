@@ -16,25 +16,25 @@ import androidx.lifecycle.ViewModelProviders
 import kotlinx.android.synthetic.main.activity_profile.*
 import ru.skillbranch.devintensive.R
 import ru.skillbranch.devintensive.models.Profile
+import ru.skillbranch.devintensive.ui.BaseActivity
 import ru.skillbranch.devintensive.ui.custom.BitmapBuilder
 import ru.skillbranch.devintensive.utils.Utils
 import ru.skillbranch.devintensive.viewmodels.ProfileViewModel
 import kotlin.math.roundToInt
 
-class ProfileActivity : AppCompatActivity(){
+class ProfileActivity : BaseActivity(){
 
     companion object {
         const val IS_EDIT_MODE = "IS_EDIT_MODE"
     }
 
-    private lateinit var viewModel: ProfileViewModel
+    private lateinit var profileViewModel: ProfileViewModel
     var isEditMode = false
 
     lateinit var viewFields : Map<String, TextView>
     private var userInitials: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        setTheme(R.style.AppTheme)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_profile)
         initViews(savedInstanceState)
@@ -42,17 +42,25 @@ class ProfileActivity : AppCompatActivity(){
         Log.d("M_ProfileActivity","onCreate")
     }
 
+    override fun onBackPressed() {
+        finish()
+        overridePendingTransition(R.anim.idle, R.anim.bottom_down)
+        super.onBackPressed()
+    }
+
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState.putBoolean(IS_EDIT_MODE, isEditMode)
     }
 
-    private fun initViewModel(){
+    override fun initViewModel(){
         viewModel = ViewModelProviders.of(this).get(ProfileViewModel::class.java)
-        viewModel.getProfileData().observe(this, Observer { updateUI(it) })
-        viewModel.getTheme().observe(this, Observer { updateTheme(it) })
-        viewModel.getRepositoryError().observe(this, Observer { updateRepoError(it) })
-        viewModel.getIsRepoError().observe(this, Observer { updateRepository(it) })
+        profileViewModel = viewModel as ProfileViewModel
+        super.initViewModel()
+
+        profileViewModel.getProfileData().observe(this, Observer { updateUI(it) })
+        profileViewModel.getRepositoryError().observe(this, Observer { updateRepoError(it) })
+        profileViewModel.getIsRepoError().observe(this, Observer { updateRepository(it) })
     }
 
     private fun updateRepository(isError: Boolean) {
@@ -64,10 +72,10 @@ class ProfileActivity : AppCompatActivity(){
         wr_repository.error = if (isError) "Невалидный адрес репозитория" else null
     }
 
-    private fun updateTheme(mode: Int) {
-        Log.d("M_ProfileActivity","updateTheme")
-        delegate.setLocalNightMode(mode)
-    }
+    //private fun updateTheme(mode: Int) {
+    //    Log.d("M_ProfileActivity","updateTheme")
+    //    delegate.setLocalNightMode(mode)
+    //}
 
     private fun updateUI(profile: Profile) {
         profile.toMap().also {
@@ -97,13 +105,10 @@ class ProfileActivity : AppCompatActivity(){
         return BitmapBuilder(iv_avatar.layoutParams.width, iv_avatar.layoutParams.height)
             .setBackgroundColor(color.data)
             .setText(text)
-            .setTextSize(convertSpToPx(this, 48))
+            .setTextSize(Utils.convertSpToPx(this, 48))
             .setTextColor(Color.WHITE)
             .build()
     }
-
-    private fun convertSpToPx(context: Context, sp: Int): Int =
-        sp * context.resources.displayMetrics.scaledDensity.roundToInt()
 
         //TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, sp.toFloat(), context.resources.displayMetrics).roundToInt()
 
@@ -124,7 +129,7 @@ class ProfileActivity : AppCompatActivity(){
         showCurrentMode(isEditMode)
 
         btn_edit.setOnClickListener {
-            viewModel.onRepoEditCompleted(wr_repository.isErrorEnabled)
+            profileViewModel.onRepoEditCompleted(wr_repository.isErrorEnabled)
 
             if (isEditMode) saveProfileInfo()
             isEditMode = !isEditMode
@@ -132,14 +137,14 @@ class ProfileActivity : AppCompatActivity(){
         }
 
         btn_switch_theme.setOnClickListener {
-            viewModel.switchTheme()
+            profileViewModel.switchTheme()
         }
 
         et_repository.addTextChangedListener(object: TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) { }
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) { }
             override fun afterTextChanged(s: Editable?) {
-                viewModel.onRepositoryChanged(s.toString())
+                profileViewModel.onRepositoryChanged(s.toString())
             }
         })
     }
@@ -187,7 +192,7 @@ class ProfileActivity : AppCompatActivity(){
             about = et_about.text.toString(),
             repository = et_repository.text.toString()
         ).apply {
-            viewModel.saveProfileData(this)
+            profileViewModel.saveProfileData(this)
         }
     }
 }

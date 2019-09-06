@@ -14,6 +14,7 @@
 
         <item name="colorBackground">@color/color_background</item>
         <item name="colorItemBackground">@android:color/white</item>
+        <item name="colorItemSelected">@color/color_gray_light2</item>
         <item name="colorChip">@color/color_primary_light</item>
         <item name="colorSnackbarText">@android:color/white</item>
         <item name="colorTitleText">@color/color_primary</item>

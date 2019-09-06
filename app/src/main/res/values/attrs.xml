@@ -24,6 +24,7 @@
 
     <attr name="colorBackground" format="reference"/>
     <attr name="colorItemBackground" format="reference"/>
+    <attr name="colorItemSelected" format="reference"/>
     <attr name="colorChip" format="reference"/>
     <attr name="colorChipGroupBackground" format="reference"/>
     <attr name="colorSnackbarText" format="reference"/>
