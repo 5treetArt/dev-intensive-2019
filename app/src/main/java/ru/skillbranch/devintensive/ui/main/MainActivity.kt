@@ -17,6 +17,7 @@ import ru.skillbranch.devintensive.R
 import ru.skillbranch.devintensive.extensions.setBackgroundDrawable
 import ru.skillbranch.devintensive.extensions.setTextColor
 import ru.skillbranch.devintensive.models.data.ChatType
+import ru.skillbranch.devintensive.ui.BaseActivity
 import ru.skillbranch.devintensive.ui.adapters.ChatAdapter
 import ru.skillbranch.devintensive.ui.adapters.ChatItemTouchHelperCallback
 import ru.skillbranch.devintensive.ui.custom.MaterialDividerItemDecorator
@@ -25,10 +26,10 @@ import ru.skillbranch.devintensive.ui.group.GroupActivity
 import ru.skillbranch.devintensive.ui.profile.ProfileActivity
 import ru.skillbranch.devintensive.viewmodels.MainViewModel
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : BaseActivity() {
 
     private lateinit var chatAdapter: ChatAdapter
-    private lateinit var viewModel: MainViewModel
+    private lateinit var mainViewModel: MainViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         setTheme(R.style.AppTheme)
@@ -47,12 +48,12 @@ class MainActivity : AppCompatActivity() {
         searchView.queryHint = getString(R.string.main_search_hint)
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener{
             override fun onQueryTextSubmit(query: String?): Boolean {
-                viewModel.handleSearchQuery(query ?: "")
+                mainViewModel.handleSearchQuery(query ?: "")
                 return true
             }
 
             override fun onQueryTextChange(query: String?): Boolean {
-                viewModel.handleSearchQuery(query ?: "")
+                mainViewModel.handleSearchQuery(query ?: "")
                 return true
             }
 
@@ -94,7 +95,7 @@ class MainActivity : AppCompatActivity() {
         val divider = MaterialDividerItemDecorator(this@MainActivity, dividerColor.data, backgroundColor.data)
 
         val touchCallback = ChatItemTouchHelperCallback(chatAdapter){chatIt ->
-            viewModel.addToArchive(chatIt.id)
+            mainViewModel.addToArchive(chatIt.id)
 
             val textColor = TypedValue()
             theme.resolveAttribute(R.attr.colorSnackbarText, textColor, true)
@@ -102,7 +103,7 @@ class MainActivity : AppCompatActivity() {
             Snackbar.make(rv_chat_list, "Вы точно хотите добавить ${chatIt.title} в архив?", Snackbar.LENGTH_LONG)
                 .setBackgroundDrawable(R.drawable.bg_snackbar)
                 .setTextColor(textColor.data)
-                .setAction(getString(R.string.main_snackbar_cancel)){ viewModel.restoreFromArchive(chatIt.id) }
+                .setAction(getString(R.string.main_snackbar_cancel)){ mainViewModel.restoreFromArchive(chatIt.id) }
                 .show()
         }
 
@@ -122,8 +123,10 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun initViewModel() {
+    override fun initViewModel() {
         viewModel = ViewModelProviders.of(this).get(MainViewModel::class.java)
-        viewModel.getChatData().observe(this, Observer { chatAdapter.updateData(it) })
+        mainViewModel = viewModel as MainViewModel
+        super.initViewModel()
+        mainViewModel.getChatData().observe(this, Observer { chatAdapter.updateData(it) })
     }
 }

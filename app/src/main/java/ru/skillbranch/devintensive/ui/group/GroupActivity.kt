@@ -17,14 +17,15 @@ import com.google.android.material.chip.Chip
 import kotlinx.android.synthetic.main.activity_group.*
 import ru.skillbranch.devintensive.R
 import ru.skillbranch.devintensive.models.data.UserItem
+import ru.skillbranch.devintensive.ui.BaseActivity
 import ru.skillbranch.devintensive.ui.custom.MaterialDividerItemDecorator
 import ru.skillbranch.devintensive.ui.adapters.UserAdapter
 import ru.skillbranch.devintensive.viewmodels.GroupViewModel
 
-class GroupActivity : AppCompatActivity() {
+class GroupActivity : BaseActivity() {
 
     private lateinit var userAdapter: UserAdapter
-    private lateinit var viewModel: GroupViewModel
+    private lateinit var groupViewModel: GroupViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         setTheme(R.style.AppTheme)
@@ -43,12 +44,12 @@ class GroupActivity : AppCompatActivity() {
         searchView.queryHint = getString(R.string.group_search_hint)
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener{
             override fun onQueryTextSubmit(query: String?): Boolean {
-                viewModel.handleSearchQuery(query)
+                groupViewModel.handleSearchQuery(query)
                 return true
             }
 
             override fun onQueryTextChange(query: String?): Boolean {
-                viewModel.handleSearchQuery(query)
+                groupViewModel.handleSearchQuery(query)
                 return true
             }
         })
@@ -71,7 +72,7 @@ class GroupActivity : AppCompatActivity() {
     }
 
     private fun initViews() {
-        userAdapter = UserAdapter { viewModel.handleSelectedItem(it.id) }
+        userAdapter = UserAdapter { groupViewModel.handleSelectedItem(it.id) }
 
         val dividerColor = TypedValue()
         theme.resolveAttribute(R.attr.colorDivider, dividerColor, true)
@@ -86,16 +87,18 @@ class GroupActivity : AppCompatActivity() {
         }
 
         fab.setOnClickListener{
-            viewModel.handleCreateGroup()
+            groupViewModel.handleCreateGroup()
             finish()
             overridePendingTransition(R.anim.idle, R.anim.bottom_down)
         }
     }
 
-    private fun initViewModel() {
+    override fun initViewModel() {
         viewModel = ViewModelProviders.of(this).get(GroupViewModel::class.java)
-        viewModel.getUserData().observe(this, Observer { userAdapter.updateData(it) })
-        viewModel.getSelectedData().observe(this, Observer {
+        groupViewModel = viewModel as GroupViewModel
+        super.initViewModel()
+        groupViewModel.getUserData().observe(this, Observer { userAdapter.updateData(it) })
+        groupViewModel.getSelectedData().observe(this, Observer {
             updateChips(it)
             toggleFab(it.size > 1)
         })
@@ -121,7 +124,7 @@ class GroupActivity : AppCompatActivity() {
             chipBackgroundColor = ColorStateList.valueOf(color.data)
             setTextColor(Color.WHITE)
         }
-        chip.setOnCloseIconClickListener{viewModel.handleRemoveChip(it.tag.toString())}
+        chip.setOnCloseIconClickListener{groupViewModel.handleRemoveChip(it.tag.toString())}
         chip_group.addView(chip)
     }
 

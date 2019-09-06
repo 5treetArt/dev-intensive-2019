@@ -12,7 +12,7 @@ import ru.skillbranch.devintensive.models.data.ChatType
 import ru.skillbranch.devintensive.repositories.ChatRepository
 import ru.skillbranch.devintensive.utils.DataGenerator
 
-class MainViewModel : ViewModel() {
+class MainViewModel : BaseViewModel() {
     private val query = mutableLiveData("")
     private val chatRepository = ChatRepository
 

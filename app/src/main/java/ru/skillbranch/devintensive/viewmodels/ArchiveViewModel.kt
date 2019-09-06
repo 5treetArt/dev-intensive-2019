@@ -9,7 +9,7 @@ import ru.skillbranch.devintensive.models.data.ChatItem
 import ru.skillbranch.devintensive.repositories.ChatRepository
 import ru.skillbranch.devintensive.utils.DataGenerator
 
-class ArchiveViewModel : ViewModel() {
+class ArchiveViewModel : BaseViewModel() {
     private val query = mutableLiveData("")
     private val chatRepository = ChatRepository
     private val chats = Transformations.map(chatRepository.loadChats()){ chats ->
